@@ -1,6 +1,6 @@
 AllCops:
   DisplayCopNames: true
-  TargetRubyVersion: 2.4.0
+  TargetRubyVersion: 2.4.1
 
 Documentation:
   Enabled: false
