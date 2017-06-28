@@ -1,10 +1,5 @@
-<!--
-
-[![Build Status](https://travis-ci.org/octopusinvitro/scafold.svg?branch=master)](https://travis-ci.org/octopusinvitro/scafold)
-[![build status](https://gitlab.com/octopusinvitro/scafold/badges/master/build.svg)](https://gitlab.com/me-stevens/scafold/commits/master)
-[![Coverage Status](https://coveralls.io/repos/github/octopusinvitro/scafold/badge.svg?branch=master)](https://coveralls.io/github/octopusinvitro/scafold?branch=master)
-
- -->
+[![Build Status](https://travis-ci.org/survival/donation-system.svg?branch=master)](https://travis-ci.org/survival/donation-system)
+[![Coverage Status](https://coveralls.io/repos/github/survival/donation-system/badge.svg)](https://coveralls.io/github/survival/donation-system)
 
 # Readme
 
