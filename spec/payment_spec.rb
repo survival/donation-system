@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'payment'
-require 'gateway'
 
 describe Payment do
   Request = Struct.new(:name)
@@ -17,12 +16,6 @@ describe Payment do
     it 'returns a response object' do
       response = payment.attempt
       expect(response.request).to eq request
-    end
-
-    it 'calls process on the gateway' do
-      expect_any_instance_of(Gateway).to receive(:process).with(request)
-
-      payment.attempt
     end
   end
 end

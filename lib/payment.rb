@@ -10,7 +10,6 @@ class Payment
   end
 
   def attempt
-    Gateway.new.process(request)
     Response.new(request)
   end
 end
