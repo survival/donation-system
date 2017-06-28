@@ -9,7 +9,8 @@ class Payment
     @request = request
   end
 
-  def process
+  def attempt
+    Gateway.new.process(request)
     Response.new(request)
   end
 end
