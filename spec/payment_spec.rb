@@ -18,7 +18,7 @@ RSpec.describe Payment do
       expect(payment.attempt).to be(true)
     end
 
-    it 'is failure without an api key' do
+    it 'fails without an api key' do
       expect(payment.attempt).to be(false)
     end
   end
