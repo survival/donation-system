@@ -9,5 +9,6 @@ group :test do
   gem 'rake'
   gem 'rspec'
   gem 'rubocop', require: false
+  gem 'vcr'
   gem 'webmock'
 end
