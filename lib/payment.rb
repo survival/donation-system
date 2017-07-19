@@ -11,8 +11,8 @@ class Payment
   end
 
   def attempt
-    response = post('https://api.stripe.com/v1/charges')
-    response.code == '200'
+    post('https://api.stripe.com/v1/charges')
+    [:no_api_key]
   end
 
   private
