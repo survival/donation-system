@@ -12,7 +12,7 @@ class Payment
 
   def attempt
     post('https://api.stripe.com/v1/charges')
-    [:no_api_key]
+    [:invalid_request]
   end
 
   private
@@ -22,6 +22,7 @@ class Payment
     https = Net::HTTP.new(uri.host, uri.port)
     https.use_ssl = true
     request = Net::HTTP::Post.new(uri.path)
+    request.basic_auth(ENV['STRIPE_API_KEY'], '')
     https.request(request)
   end
 end
