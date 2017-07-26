@@ -20,6 +20,13 @@ Explain your project here.
 bundle install
 ```
 
+## Tests
+
+You need to set your environment with a `STRIPE_API_KEY` variable equal to a valid Stripe API key before running the tests. For example:
+
+```bash
+export STRIPE_API_KEY=blah
+```
 
 ### To run all tests and rubocop
 
