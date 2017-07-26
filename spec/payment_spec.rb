@@ -3,6 +3,7 @@
 require 'support/with_env'
 require 'spec_helper'
 require 'payment'
+require 'thank_you_mailer'
 
 RSpec.describe Payment do
   include Support::WithEnv
@@ -43,12 +44,25 @@ RSpec.describe Payment do
       expect(payment.attempt).to eq([:card_error])
     end
 
-    it 'succeeds with a valid api key and valid parameters' do
-      request = Request.new(
-        '1000', 'usd', '4242424242424242', '123', '2020', '01'
-      )
-      payment = Payment.new(request)
-      expect(payment.attempt).to eq([])
+    context 'success' do
+      it 'succeeds with a valid api key and valid parameters' do
+        request = Request.new(
+          '1000', 'usd', '4242424242424242', '123', '2020', '01'
+        )
+        payment = Payment.new(request)
+        expect(payment.attempt).to eq([])
+      end
+
+      it 'should send a thank you email' do
+        allow(ThankYouMailer).to receive(:send_email)
+
+        request = Request.new(
+          '1000', 'usd', '4242424242424242', '123', '2020', '01'
+        )
+        Payment.new(request).attempt
+
+        expect(ThankYouMailer).to have_received :send_email
+      end
     end
   end
 end
