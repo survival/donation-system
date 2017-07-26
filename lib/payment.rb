@@ -11,8 +11,8 @@ class Payment
   end
 
   def attempt
-    post('https://api.stripe.com/v1/charges')
-    [:invalid_request]
+    response = post('https://api.stripe.com/v1/charges')
+    response.code == '200' ? [] : [:invalid_request]
   end
 
   private
@@ -21,8 +21,21 @@ class Payment
     uri = URI.parse(url)
     https = Net::HTTP.new(uri.host, uri.port)
     https.use_ssl = true
-    request = Net::HTTP::Post.new(uri.path)
-    request.basic_auth(ENV['STRIPE_API_KEY'], '')
-    https.request(request)
+    http_request = Net::HTTP::Post.new(uri.path)
+    http_request.basic_auth(ENV['STRIPE_API_KEY'], '')
+    http_request.set_form_data(form_data)
+    https.request(http_request)
+  end
+
+  def form_data
+    {
+      'amount' => request.amount,
+      'currency' => request.currency,
+      'source[object]' => 'card',
+      'source[number]' => request.card_number,
+      'source[exp_month]' => request.exp_month,
+      'source[exp_year]' => request.exp_year,
+      'source[cvc]' => request.cvc
+    }
   end
 end
