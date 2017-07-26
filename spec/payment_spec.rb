@@ -35,6 +35,14 @@ RSpec.describe Payment do
       expect(payment.attempt).to eq([:invalid_request])
     end
 
+    it 'fails with a valid api key and invalid card number' do
+      request = Request.new(
+        '1000', 'usd', '1235424242424242', '123', '2020', '01'
+      )
+      payment = Payment.new(request)
+      expect(payment.attempt).to eq([:card_error])
+    end
+
     it 'succeeds with a valid api key and valid parameters' do
       request = Request.new(
         '1000', 'usd', '4242424242424242', '123', '2020', '01'

@@ -12,7 +12,13 @@ class Payment
 
   def attempt
     response = post('https://api.stripe.com/v1/charges')
-    response.code == '200' ? [] : [:invalid_request]
+    if response.code == '200'
+      []
+    elsif response.code == '402'
+      [:card_error]
+    else
+      [:invalid_request]
+    end
   end
 
   private
