@@ -7,9 +7,11 @@ require 'payment'
 RSpec.describe Payment do
   include Support::WithEnv
 
-  Request = Struct.new(:name)
+  Request = Struct.new(
+    :amount, :currency, :card_number, :cvc, :exp_year, :exp_month
+  )
 
-  let(:request) { Request.new('bob') }
+  let(:request) { Request.new(nil) }
   let(:payment) { Payment.new(request) }
 
   it 'stores the request object passed in the initializer' do
@@ -17,10 +19,6 @@ RSpec.describe Payment do
   end
 
   describe '#attempt', vcr: { record: :once } do
-    xit 'is successful' do
-      expect(payment.attempt).to be(true)
-    end
-
     it 'fails without an api key' do
       with_env('STRIPE_API_KEY' => '') do
         expect(payment.attempt).to eq([:invalid_request])
@@ -35,6 +33,22 @@ RSpec.describe Payment do
 
     it 'fails with a valid api key but no other parameters' do
       expect(payment.attempt).to eq([:invalid_request])
+    end
+
+    it 'fails with a valid api key and invalid card number' do
+      request = Request.new(
+        '1000', 'usd', '1235424242424242', '123', '2020', '01'
+      )
+      payment = Payment.new(request)
+      expect(payment.attempt).to eq([:card_error])
+    end
+
+    it 'succeeds with a valid api key and valid parameters' do
+      request = Request.new(
+        '1000', 'usd', '4242424242424242', '123', '2020', '01'
+      )
+      payment = Payment.new(request)
+      expect(payment.attempt).to eq([])
     end
   end
 end
