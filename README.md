@@ -22,7 +22,7 @@ bundle install
 
 ## Tests
 
-You need to set your environment with a `STRIPE_API_KEY` variable equal to a valid Stripe API key before running the tests. For example:
+You need to set your environment with a `STRIPE_API_KEY` variable equal to a valid Stripe API private test key before running the tests. For example:
 
 ```bash
 export STRIPE_API_KEY=blah
