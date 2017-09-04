@@ -9,7 +9,7 @@ RSpec.describe Payment do
   include Support::WithEnv
 
   Request = Struct.new(
-    :amount, :currency, :card_number, :cvc, :exp_year, :exp_month
+    :amount, :currency, :card_number, :cvc, :exp_year, :exp_month, :email
   )
 
   let(:request) { Request.new(nil) }
@@ -38,7 +38,7 @@ RSpec.describe Payment do
 
     it 'fails with a valid api key and invalid card number' do
       request = Request.new(
-        '1000', 'usd', '1235424242424242', '123', '2020', '01'
+        '1000', 'usd', '1235424242424242', '123', '2020', '01', 'irrelevant'
       )
       payment = Payment.new(request)
       expect(payment.attempt).to eq([:card_error])
@@ -47,21 +47,23 @@ RSpec.describe Payment do
     context 'success' do
       it 'succeeds with a valid api key and valid parameters' do
         request = Request.new(
-          '1000', 'usd', '4242424242424242', '123', '2020', '01'
+          '1000', 'usd', '4242424242424242', '123', '2020', '01', 'irrelevant'
         )
         payment = Payment.new(request)
         expect(payment.attempt).to eq([])
       end
 
       it 'should send a thank you email' do
-        allow(ThankYouMailer).to receive(:send_email)
+        allow(ThankYouMailer).to receive(:send_email).with('user@example.com')
 
         request = Request.new(
-          '1000', 'usd', '4242424242424242', '123', '2020', '01'
+          '1000', 'usd', '4242424242424242', '123', '2020', '01',
+          'user@example.com'
         )
         Payment.new(request).attempt
 
-        expect(ThankYouMailer).to have_received :send_email
+        expect(ThankYouMailer).to have_received(:send_email)
+          .with('user@example.com')
       end
     end
   end

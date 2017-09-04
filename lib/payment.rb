@@ -14,7 +14,7 @@ class Payment
   def attempt
     response = post('https://api.stripe.com/v1/charges')
     if response.code == '200'
-      ThankYouMailer.send_email
+      ThankYouMailer.send_email(request.email)
       []
     elsif response.code == '402'
       [:card_error]
