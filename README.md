@@ -22,7 +22,7 @@ bundle install
 
 ## Tests
 
-You need to set your environment with a `STRIPE_API_KEY` variable equal to a valid Stripe API key before running the tests. For example:
+You need to set your environment with a `STRIPE_API_KEY` variable equal to a valid Stripe API private test key before running the tests. For example:
 
 ```bash
 export STRIPE_API_KEY=blah
@@ -49,6 +49,16 @@ bundle exec rspec path/to/test/file.rb
 bundle exec rspec path/to/test/file.rb:TESTLINENUMBER
 ```
 
+## Testing emails in production
+
+You can send an email to any email address using the `test_email_server.rb` script, and setting your email server, username and password, like this:
+
+```bash
+export EMAIL_SERVER=YOUR_EMAIL_SERVER
+export EMAIL_USERNAME=YOUR_USERNAME
+export EMAIL_PASSWORD=YOUR_PASSWORD
+bundle exec ruby scripts/test_email_server.rb 'YOUR_EMAIL_HERE'
+```
 
 ## License
 
