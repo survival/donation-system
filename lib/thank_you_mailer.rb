@@ -8,6 +8,7 @@ class ThankYouMailer
       Mail.deliver do
         to recipient
         from 'info@survivalinternational.org'
+        subject 'Thank you for your donation'
         body "Hello #{first_name}"
       end
     end

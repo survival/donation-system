@@ -17,4 +17,8 @@ RSpec.describe ThankYouMailer do
   it 'sends a simple text email including the person name' do
     expect(email.body).to include('Firstname')
   end
+
+  it 'has a subject' do
+    expect(email.subject).not_to be(nil)
+  end
 end
