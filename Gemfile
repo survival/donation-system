@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 ruby '2.4.1'
 
 gem 'mail'
+gem 'restforce', '~> 2.5.3'
 
 group :test do
   gem 'coveralls', require: false
