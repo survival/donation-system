@@ -19,7 +19,7 @@ RSpec.describe Payment do
   before { allow(Salesforce::Database).to receive(:add_donation) }
 
   it 'stores the request object passed in the initializer' do
-    expect(payment.request).to eq request
+    expect(payment.request).to eq(request)
   end
 
   describe '#attempt', vcr: { record: :once } do
@@ -49,35 +49,26 @@ RSpec.describe Payment do
     end
 
     context 'success' do
-      it 'succeeds with a valid api key and valid parameters' do
-        request = Request.new(
+      let(:request) do
+        Request.new(
           '1000', 'usd', '4242424242424242', '123', '2020', '01',
-          'irrelevant', 'irrelevant'
+          'user@example.com', 'Name'
         )
+      end
+
+      it 'succeeds with a valid api key and valid parameters' do
         payment = described_class.new(request)
-        expect(payment.attempt).to eq([])
+        expect(payment.attempt).to be_empty
       end
 
       it 'should send a thank you email' do
         allow(ThankYouMailer).to receive(:send_email)
-          .with('user@example.com', 'Name')
-
-        request = Request.new(
-          '1000', 'usd', '4242424242424242', '123', '2020', '01',
-          'user@example.com', 'Name'
-        )
-
         described_class.new(request).attempt
-
         expect(ThankYouMailer).to have_received(:send_email)
           .with('user@example.com', 'Name')
       end
 
       it 'adds the donation to the supporters database' do
-        request = Request.new(
-          '1000', 'usd', '4242424242424242', '123', '2020', '01',
-          'user@example.com', 'Name'
-        )
         described_class.new(request).attempt
         expect(Salesforce::Database).to have_received(:add_donation)
           .with(request)
