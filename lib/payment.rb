@@ -2,19 +2,22 @@
 
 require 'net/http'
 require 'net/https'
+require 'salesforce/database'
 require 'thank_you_mailer'
 
 class Payment
   attr_accessor :request
 
-  def initialize(request)
+  def initialize(request, supporter_database = Salesforce::Database)
     @request = request
+    @supporter_database = supporter_database
   end
 
   def attempt
     response = post('https://api.stripe.com/v1/charges')
     if response.code == '200'
       ThankYouMailer.send_email(request.email, request.name)
+      supporter_database.add_donation(request)
       []
     elsif response.code == '402'
       [:card_error]
@@ -24,6 +27,8 @@ class Payment
   end
 
   private
+
+  attr_reader :supporter_database
 
   def post(url)
     uri = URI.parse(url)
