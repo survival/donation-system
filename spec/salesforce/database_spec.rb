@@ -15,8 +15,7 @@ module Salesforce
         finder_result = Result.new({ Id: '1234' }, [])
         donation_result = Result.new({ Id: '5678' }, [])
 
-        allow(described_class::SupporterFinder).to receive(:execute)
-          .and_return(finder_result)
+        allow(SupporterFinder).to receive(:execute).and_return(finder_result)
         allow(described_class::DonationCreator).to receive(:execute)
           .and_return(donation_result)
         expect(described_class.add_donation(data)).to be_empty
@@ -27,8 +26,7 @@ module Salesforce
         creation_result = Result.new({ Id: '1234' }, [])
         donation_result = Result.new({ Id: '5678' }, [])
 
-        allow(described_class::SupporterFinder).to receive(:execute)
-          .and_return(finder_result)
+        allow(SupporterFinder).to receive(:execute).and_return(finder_result)
         allow(described_class::SupporterCreator).to receive(:execute)
           .and_return(creation_result)
         allow(described_class::DonationCreator).to receive(:execute)
@@ -50,8 +48,7 @@ module Salesforce
       it 'returns errors if problems with finder' do
         finder_result = Result.new(nil, [:finder_error])
 
-        allow(described_class::SupporterFinder).to receive(:execute)
-          .and_return(finder_result)
+        allow(SupporterFinder).to receive(:execute).and_return(finder_result)
         expect(described_class.add_donation(data)).to eq([:finder_error])
       end
 
@@ -59,8 +56,7 @@ module Salesforce
         finder_result = Result.new(nil, [])
         creation_result = Result.new(nil, [:creation_error])
 
-        allow(described_class::SupporterFinder).to receive(:execute)
-          .and_return(finder_result)
+        allow(SupporterFinder).to receive(:execute).and_return(finder_result)
         allow(described_class::SupporterCreator).to receive(:execute)
           .and_return(creation_result)
         expect(described_class.add_donation(data)).to eq([:creation_error])
@@ -70,8 +66,7 @@ module Salesforce
         finder_result = Result.new({ Id: '1234' }, [])
         donation_result = Result.new(nil, [:donation_error])
 
-        allow(described_class::SupporterFinder).to receive(:execute)
-          .and_return(finder_result)
+        allow(SupporterFinder).to receive(:execute).and_return(finder_result)
         allow(described_class::DonationCreator).to receive(:execute)
           .and_return(donation_result)
         expect(described_class.add_donation(data)).to eq([:donation_error])
