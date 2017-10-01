@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-require 'restforce'
-require 'salesforce/client_error'
+require 'salesforce/client_api'
 require 'salesforce/donation_validator'
-require 'salesforce/result'
 
 module Salesforce
   class DonationCreator
-    def self.execute(data, supporter, client = Restforce.new)
+    def self.execute(data, supporter, client = ClientAPI.new)
       new(client, data, supporter).execute
     end
 
@@ -15,7 +13,6 @@ module Salesforce
       @client = client
       @data = data
       @supporter = supporter
-      @client_errors = []
     end
 
     def execute
@@ -31,30 +28,28 @@ module Salesforce
     end
 
     def donation
+      donation_id = create if validation.okay?
       fetch(donation_id) if donation_id
-    end
-
-    def donation_id
-      @donation_id ||= create(validation.item) if validation.okay?
     end
 
     def validation
       @validation ||= DonationValidator.execute(data, supporter)
     end
 
-    def create(sobject_fields)
-      client.create!(table, sobject_fields)
-    rescue Faraday::ClientError => error
-      @client_errors += ClientError.new(error).errors
-      nil
+    def fields
+      validation.item
     end
 
-    def errors
-      validation.errors + @client_errors
+    def create
+      client.create(table, fields)
     end
 
     def fetch(id)
-      client.find(table, id)
+      client.fetch(table, id)
+    end
+
+    def errors
+      validation.errors + client.errors
     end
   end
 end

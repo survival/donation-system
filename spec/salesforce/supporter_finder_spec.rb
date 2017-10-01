@@ -34,7 +34,7 @@ module Salesforce
     end
 
     def search_by(field, value)
-      client = Restforce.new(host: 'cs70.salesforce.com')
+      client = ClientAPI.new(Restforce.new(host: 'cs70.salesforce.com'))
       described_class.execute(field, value, client)
     end
   end

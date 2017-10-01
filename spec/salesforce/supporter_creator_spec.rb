@@ -30,17 +30,22 @@ module Salesforce
       end
 
       it 'fails if there is a creation problem' do
-        allow(SupporterValidator).to receive(:execute)
-          .and_return(Result.new(nil, []))
-        result = create_supporter(data)
+        result = create_supporter(data, ClientFake.new(nil, [:creation_error]))
         expect(result).not_to be_okay
         expect(result.item).to be_nil
       end
     end
 
-    def create_supporter(data)
-      client = Restforce.new(host: 'cs70.salesforce.com')
+    def create_supporter(data, client_fake = nil)
+      client_default = ClientAPI.new(Restforce.new(host: 'cs70.salesforce.com'))
+      client = client_fake || client_default
       described_class.execute(data, client)
+    end
+
+    ClientFake = Struct.new(:supporter_id, :errors) do
+      def create(_table, _fields)
+        supporter_id
+      end
     end
   end
 end

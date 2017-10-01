@@ -38,7 +38,7 @@ module Salesforce
     end
 
     def create_donation(data, supporter)
-      client = Restforce.new(host: 'cs70.salesforce.com')
+      client = ClientAPI.new(Restforce.new(host: 'cs70.salesforce.com'))
       described_class.execute(data, supporter, client)
     end
   end

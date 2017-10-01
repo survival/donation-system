@@ -1,20 +1,17 @@
 # frozen_string_literal: true
 
-require 'restforce'
-require 'salesforce/client_error'
-require 'salesforce/result'
+require 'salesforce/client_api'
 require 'salesforce/supporter_validator'
 
 module Salesforce
   class SupporterCreator
-    def self.execute(data, client = Restforce.new)
+    def self.execute(data, client = ClientAPI.new)
       new(client, data).execute
     end
 
     def initialize(client, data)
       @client = client
       @data = data
-      @client_errors = []
     end
 
     def execute
@@ -30,30 +27,28 @@ module Salesforce
     end
 
     def supporter
+      supporter_id = create if validation.okay?
       fetch(supporter_id) if supporter_id
-    end
-
-    def supporter_id
-      @supporter_id ||= create(validation.item) if validation.okay?
     end
 
     def validation
       @validation ||= SupporterValidator.execute(data)
     end
 
-    def create(sobject_fields)
-      client.create!(table, sobject_fields)
-    rescue Faraday::ClientError => error
-      @client_errors += ClientError.new(error).errors
-      nil
+    def fields
+      validation.item
     end
 
-    def errors
-      validation.errors + @client_errors
+    def create
+      client.create(table, fields)
     end
 
     def fetch(id)
-      client.find(table, id)
+      client.fetch(table, id)
+    end
+
+    def errors
+      validation.errors + client.errors
     end
   end
 end
