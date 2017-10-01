@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'salesforce/donation_creator'
 require 'salesforce/supporter_creator'
 require 'salesforce/supporter_finder'
 
@@ -17,10 +18,6 @@ module Salesforce
       return [:missing_email] unless email_present?
       return supporter_result.errors unless supporter_result.okay?
       create_donation.errors
-    end
-
-    class DonationCreator
-      def self.execute(_data, _supporter); end
     end
 
     private

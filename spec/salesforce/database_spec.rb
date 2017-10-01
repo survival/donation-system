@@ -16,8 +16,7 @@ module Salesforce
         donation_result = Result.new({ Id: '5678' }, [])
 
         allow(SupporterFinder).to receive(:execute).and_return(finder_result)
-        allow(described_class::DonationCreator).to receive(:execute)
-          .and_return(donation_result)
+        allow(DonationCreator).to receive(:execute).and_return(donation_result)
         expect(described_class.add_donation(data)).to be_empty
       end
 
@@ -28,8 +27,7 @@ module Salesforce
 
         allow(SupporterFinder).to receive(:execute).and_return(finder_result)
         allow(SupporterCreator).to receive(:execute).and_return(creation_result)
-        allow(described_class::DonationCreator).to receive(:execute)
-          .and_return(donation_result)
+        allow(DonationCreator).to receive(:execute).and_return(donation_result)
         expect(described_class.add_donation(data)).to be_empty
       end
     end
@@ -65,8 +63,7 @@ module Salesforce
         donation_result = Result.new(nil, [:donation_error])
 
         allow(SupporterFinder).to receive(:execute).and_return(finder_result)
-        allow(described_class::DonationCreator).to receive(:execute)
-          .and_return(donation_result)
+        allow(DonationCreator).to receive(:execute).and_return(donation_result)
         expect(described_class.add_donation(data)).to eq([:donation_error])
       end
     end
