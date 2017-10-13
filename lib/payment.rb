@@ -15,15 +15,12 @@ class Payment
 
   def attempt
     response = post('https://api.stripe.com/v1/charges')
-    if response.code == '200'
+    errors = stripe_error_codes.fetch(response.code, [:invalid_request])
+    if errors.empty?
       ThankYouMailer.send_email(request.email, request.name)
       supporter_database.add_donation(request)
-      []
-    elsif response.code == '402'
-      [:card_error]
-    else
-      [:invalid_request]
     end
+    errors
   end
 
   private
@@ -49,6 +46,13 @@ class Payment
       'source[exp_month]' => request.exp_month,
       'source[exp_year]' => request.exp_year,
       'source[cvc]' => request.cvc
+    }
+  end
+
+  def stripe_error_codes
+    {
+      '200' => [],
+      '402' => [:card_error]
     }
   end
 end
