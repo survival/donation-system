@@ -3,15 +3,7 @@
 
 # Readme
 
-Explain your project here.
-
-
-## How to use this project
-
-* If your project is public and hosted in GitHub, you can use travis and coveralls for free.
-* If your project is private, you can host it for free in Gitlab and use their CI. You will need to pay for test coverage though.
-* Update badges with your user/repo names. Turn your repo ON in Travis.
-* Update license to your preferred one.
+This is the new donation system for the Survival International site.
 
 
 ### To initialise the project
@@ -28,6 +20,18 @@ You need to set your environment with a `STRIPE_API_KEY` variable equal to a val
 export STRIPE_API_KEY=blah
 ```
 
+You also need the following Salesforce environment variables:
+
+```bash
+export SALESFORCE_USERNAME='YOUR_USERNAME'
+export SALESFORCE_PASSWORD='YOUR_PASSWORD'
+export SALESFORCE_SECURITY_TOKEN='YOUR_SECURITY_TOKEN'
+export SALESFORCE_CLIENT_ID='YOUR_CLIENT_ID'
+export SALESFORCE_CLIENT_SECRET='YOUR_CLIENT_SECRET'
+export SALESFORCE_API_VERSION="38.0"
+```
+
+
 ### To run all tests and rubocop
 
 ```bash
@@ -39,26 +43,28 @@ bundle exec rake
 
 
 ```bash
-bundle exec rspec path/to/test/file.rb
+bundle exec rspec path/to/test/file.rb && rubocop
 ```
 
 
 ### To run one test
 
 ```bash
-bundle exec rspec path/to/test/file.rb:TESTLINENUMBER
+bundle exec rspec path/to/test/file.rb:TESTLINENUMBER && rubocop
 ```
+
 
 ## Testing emails in production
 
 You can send an email to any email address using the `test_email_server.rb` script, and setting your email server, username and password, like this:
 
 ```bash
-export EMAIL_SERVER=YOUR_EMAIL_SERVER
-export EMAIL_USERNAME=YOUR_USERNAME
-export EMAIL_PASSWORD=YOUR_PASSWORD
+export EMAIL_SERVER='YOUR_EMAIL_SERVER'
+export EMAIL_USERNAME='YOUR_USERNAME'
+export EMAIL_PASSWORD='YOUR_PASSWORD'
 bundle exec ruby scripts/test_email_server.rb 'YOUR_EMAIL_HERE'
 ```
+
 
 ## License
 
