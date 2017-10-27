@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'stripe'
+require 'stripe/input_data_validator'
 require 'stripe/result'
 
 module Stripe
@@ -11,17 +12,16 @@ module Stripe
 
     def initialize(data)
       @data = data
-      @errors = []
+      @api_errors = []
     end
 
     def charge
-      return Result.new(nil, [:missing_data]) unless data
       Result.new(charge_result, errors)
     end
 
     private
 
-    attr_reader :data, :errors
+    attr_reader :data, :api_errors
 
     def charge_result
       charge_and_rescue_data_related_errors
@@ -53,17 +53,20 @@ module Stripe
     end
 
     def input_data
-      {
-        amount: data.amount,
-        currency: data.currency,
-        source: data.token,
-        description: "Charge for #{data.email}"
-      }
+      validation.item if validation.okay?
+    end
+
+    def validation
+      @validation ||= InputDataValidator.execute(data)
     end
 
     def save_error(error_code)
-      @errors << error_code
+      @api_errors << error_code
       nil
+    end
+
+    def errors
+      validation.errors + api_errors
     end
   end
 end

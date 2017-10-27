@@ -12,7 +12,18 @@ module Stripe
       include Support::WithEnv
 
       let(:stripe_endpoint) { 'https://api.stripe.com/v1/charges' }
-      let(:data) { RawStripeData.new(nil, nil, 'tok_visa', nil, nil) }
+      let(:data) { RawStripeData.new('', '', 'tok_visa', '', '') }
+
+      it 'fails if no data is provided' do
+        result = described_class.charge(nil)
+        expect(result.item).to be_nil
+        expect(result.errors).to include(:missing_data)
+
+        data = RawStripeData.new(nil, nil, nil, nil, nil)
+        result = described_class.charge(data)
+        expect(result.item).to be_nil
+        expect(result.errors).to include(:missing_amount)
+      end
 
       it 'fails without an API key' do
         with_env('STRIPE_API_KEY' => '') do
@@ -71,12 +82,6 @@ module Stripe
       it 'fails due to reasons unrelated to Stripe' do
         allow(Stripe::Charge).to receive(:create).and_raise(StandardError)
         expect_charge_to_fail_with(:unknown_error)
-      end
-
-      it 'fails if no data is provided' do
-        result = described_class.charge(nil)
-        expect(result.item).to be_nil
-        expect(result.errors).to eq([:missing_data])
       end
     end
 
