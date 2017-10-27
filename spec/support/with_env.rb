@@ -2,13 +2,6 @@
 
 module Support
   module WithEnv
-    # Allows setting temporary ENV variables for a test
-    #
-    # Usage:
-    #
-    # with_env("POLLING_INTERVAL" => 1, "EMAIL" => "always") do
-    #   .. test here...
-    # end
     def with_env(settings)
       old_settings = {}
       settings.each do |variable, value|
@@ -17,7 +10,7 @@ module Support
       end
       yield
     ensure
-      settings.each do |variable, _value|
+      settings.each_key do |variable|
         ENV[variable] = old_settings[variable]
       end
     end
