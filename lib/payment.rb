@@ -1,54 +1,26 @@
 # frozen_string_literal: true
 
-require 'net/http'
-require 'net/https'
 require 'salesforce/database'
+require 'stripe/gateway'
 require 'thank_you_mailer'
 
 class Payment
-  attr_accessor :request
-
-  def initialize(request, supporter_database = Salesforce::Database)
-    @request = request
+  def initialize(request_data, supporter_database = Salesforce::Database)
+    @request_data = request_data
     @supporter_database = supporter_database
   end
 
   def attempt
-    response = post('https://api.stripe.com/v1/charges')
-    if response.code == '200'
-      ThankYouMailer.send_email(request.email, request.name)
-      supporter_database.add_donation(request)
-      []
-    elsif response.code == '402'
-      [:card_error]
+    result = Stripe::Gateway.charge(request_data)
+    if result.okay?
+      ThankYouMailer.send_email(request_data.email, request_data.name)
+      supporter_database.add_donation(request_data)
     else
-      [:invalid_request]
+      result.errors
     end
   end
 
   private
 
-  attr_reader :supporter_database
-
-  def post(url)
-    uri = URI.parse(url)
-    https = Net::HTTP.new(uri.host, uri.port)
-    https.use_ssl = true
-    http_request = Net::HTTP::Post.new(uri.path)
-    http_request.basic_auth(ENV['STRIPE_API_KEY'], '')
-    http_request.set_form_data(form_data)
-    https.request(http_request)
-  end
-
-  def form_data
-    {
-      'amount' => request.amount,
-      'currency' => request.currency,
-      'source[object]' => 'card',
-      'source[number]' => request.card_number,
-      'source[exp_month]' => request.exp_month,
-      'source[exp_year]' => request.exp_year,
-      'source[cvc]' => request.cvc
-    }
-  end
+  attr_reader :request_data, :supporter_database
 end
