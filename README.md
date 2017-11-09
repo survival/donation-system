@@ -6,7 +6,7 @@
 This is the new donation system for the Survival International site.
 
 
-### To initialise the project
+## To initialise the project
 
 ```bash
 bundle install
@@ -64,6 +64,11 @@ export EMAIL_USERNAME='YOUR_USERNAME'
 export EMAIL_PASSWORD='YOUR_PASSWORD'
 bundle exec ruby scripts/test_email_server.rb 'YOUR_EMAIL_HERE'
 ```
+
+
+## Contributing
+
+Please check out our [contribution guides](https://github.com/survival/contributing-guides) and our [code of conduct](https://github.com/survival/contributing-guides/blob/master/code-of-conduct.md)
 
 
 ## License
