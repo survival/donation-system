@@ -10,13 +10,12 @@ RSpec.describe Payment do
   Request = Struct.new(:email, :name)
 
   let(:request) { Request.new('user@example.com', 'Name') }
-  let(:payment) { described_class.new(request) }
 
   describe 'when the gateway is unsuccessful' do
     it 'returns the gateway error' do
       gateway_result = Stripe::Result.new(nil, [:error])
       allow(Stripe::Gateway).to receive(:charge).and_return(gateway_result)
-      expect(described_class.new(request).attempt).to eq([:error])
+      expect(described_class.attempt(request)).to eq([:error])
     end
   end
 
@@ -31,22 +30,22 @@ RSpec.describe Payment do
     it 'returns errors if there is a problem with the supporter database' do
       errors = %i[foo bar]
       allow(Salesforce::Database).to receive(:add_donation).and_return(errors)
-      expect(described_class.new(request).attempt).to eq(errors)
+      expect(described_class.attempt(request)).to eq(errors)
     end
 
     it 'succeeds if there are no problems with the supporter database' do
-      expect(described_class.new(request).attempt).to be_empty
+      expect(described_class.attempt(request)).to be_empty
     end
 
     it 'sends a thank you email' do
       allow(ThankYouMailer).to receive(:send_email)
-      described_class.new(request).attempt
+      described_class.attempt(request)
       expect(ThankYouMailer).to have_received(:send_email)
         .with('user@example.com', 'Name')
     end
 
     it 'adds the donation to the supporters database' do
-      described_class.new(request).attempt
+      described_class.attempt(request)
       expect(Salesforce::Database).to have_received(:add_donation)
         .with(request)
     end

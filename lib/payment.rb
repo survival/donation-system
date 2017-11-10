@@ -5,16 +5,19 @@ require 'stripe/gateway'
 require 'thank_you_mailer'
 
 class Payment
-  def initialize(request_data, supporter_database = Salesforce::Database)
+  def self.attempt(request_data)
+    new(request_data).attempt
+  end
+
+  def initialize(request_data)
     @request_data = request_data
-    @supporter_database = supporter_database
   end
 
   def attempt
     result = Stripe::Gateway.charge(request_data)
     if result.okay?
       ThankYouMailer.send_email(request_data.email, request_data.name)
-      supporter_database.add_donation(request_data)
+      Salesforce::Database.add_donation(request_data)
     else
       result.errors
     end
@@ -22,5 +25,5 @@ class Payment
 
   private
 
-  attr_reader :request_data, :supporter_database
+  attr_reader :request_data
 end
