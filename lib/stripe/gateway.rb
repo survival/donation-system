@@ -48,7 +48,7 @@ module Stripe
     end
 
     def create_stripe_charge
-      Stripe.api_key = ENV['STRIPE_API_KEY']
+      Stripe.api_key = ENV['STRIPE_SECRET_KEY']
       Stripe::Charge.create(input_data)
     end
 
