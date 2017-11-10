@@ -26,13 +26,13 @@ module Stripe
       end
 
       it 'fails without an API key' do
-        with_env('STRIPE_API_KEY' => '') do
+        with_env('STRIPE_SECRET_KEY' => '') do
           expect_charge_to_fail_with(:invalid_api_key)
         end
       end
 
       it 'fails with an invalid API key' do
-        with_env('STRIPE_API_KEY' => 'aaaaa') do
+        with_env('STRIPE_SECRET_KEY' => 'aaaaa') do
           expect_charge_to_fail_with(:invalid_api_key)
         end
       end
