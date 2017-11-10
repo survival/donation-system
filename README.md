@@ -1,10 +1,27 @@
 [![Build Status](https://travis-ci.org/survival/donation-system.svg?branch=master)](https://travis-ci.org/survival/donation-system)
 [![Coverage Status](https://coveralls.io/repos/github/survival/donation-system/badge.svg)](https://coveralls.io/github/survival/donation-system)
 
-# Readme
+# Donation System
 
 This is the new donation system for the Survival International site.
 
+
+## Installation
+
+This gem is still under development and in an unstable state.
+Hence, it is not in rubygems yet.
+
+To use it, add this line to your application's Gemfile:
+
+```ruby
+gem 'donation-system', git: 'https://github.com/survival/donation-system'
+```
+
+and append `bundle exec` in front of any CLI command that requires this gem.
+
+# Development
+
+To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version. Then push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## To initialise the project
 
