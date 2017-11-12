@@ -15,7 +15,7 @@ Mail.defaults do
 end
 
 def main
-  ThankYouMailer.send_email(ARGV[0], 'foo')
+  DonationSystem::ThankYouMailer.send_email(ARGV[0], 'foo')
 end
 
 main
