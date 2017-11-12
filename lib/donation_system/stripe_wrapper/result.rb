@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DonationSystem
-  module Salesforce
+  module StripeWrapper
     Result = Struct.new(:item, :errors) do
       def okay?
         errors.empty?

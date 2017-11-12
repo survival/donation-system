@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'mail'
-require_relative '../lib/thank_you_mailer'
+require_relative '../lib/donation_system/thank_you_mailer'
 
 Mail.defaults do
   delivery_method(

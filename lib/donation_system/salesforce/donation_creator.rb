@@ -1,55 +1,57 @@
 # frozen_string_literal: true
 
-require 'salesforce/client_api'
-require 'salesforce/donation_validator'
+require_relative 'client_api'
+require_relative 'donation_validator'
 
-module Salesforce
-  class DonationCreator
-    def self.execute(data, supporter, client = ClientAPI.new)
-      new(client, data, supporter).execute
-    end
+module DonationSystem
+  module Salesforce
+    class DonationCreator
+      def self.execute(data, supporter, client = ClientAPI.new)
+        new(client, data, supporter).execute
+      end
 
-    def initialize(client, data, supporter)
-      @client = client
-      @data = data
-      @supporter = supporter
-    end
+      def initialize(client, data, supporter)
+        @client = client
+        @data = data
+        @supporter = supporter
+      end
 
-    def execute
-      Result.new(donation, errors)
-    end
+      def execute
+        Result.new(donation, errors)
+      end
 
-    private
+      private
 
-    attr_reader :client, :data, :supporter
+      attr_reader :client, :data, :supporter
 
-    def table
-      'Opportunity'
-    end
+      def table
+        'Opportunity'
+      end
 
-    def donation
-      donation_id = create if validation.okay?
-      fetch(donation_id) if donation_id
-    end
+      def donation
+        donation_id = create if validation.okay?
+        fetch(donation_id) if donation_id
+      end
 
-    def validation
-      @validation ||= DonationValidator.execute(data, supporter)
-    end
+      def validation
+        @validation ||= DonationValidator.execute(data, supporter)
+      end
 
-    def fields
-      validation.item
-    end
+      def fields
+        validation.item
+      end
 
-    def create
-      client.create(table, fields)
-    end
+      def create
+        client.create(table, fields)
+      end
 
-    def fetch(id)
-      client.fetch(table, id)
-    end
+      def fetch(id)
+        client.fetch(table, id)
+      end
 
-    def errors
-      validation.errors + client.errors
+      def errors
+        validation.errors + client.errors
+      end
     end
   end
 end

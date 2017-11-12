@@ -1,54 +1,56 @@
 # frozen_string_literal: true
 
-require 'salesforce/client_api'
-require 'salesforce/supporter_validator'
+require_relative 'client_api'
+require_relative 'supporter_validator'
 
-module Salesforce
-  class SupporterCreator
-    def self.execute(data, client = ClientAPI.new)
-      new(client, data).execute
-    end
+module DonationSystem
+  module Salesforce
+    class SupporterCreator
+      def self.execute(data, client = ClientAPI.new)
+        new(client, data).execute
+      end
 
-    def initialize(client, data)
-      @client = client
-      @data = data
-    end
+      def initialize(client, data)
+        @client = client
+        @data = data
+      end
 
-    def execute
-      Result.new(supporter, errors)
-    end
+      def execute
+        Result.new(supporter, errors)
+      end
 
-    private
+      private
 
-    attr_reader :client, :data
+      attr_reader :client, :data
 
-    def table
-      'Contact'
-    end
+      def table
+        'Contact'
+      end
 
-    def supporter
-      supporter_id = create if validation.okay?
-      fetch(supporter_id) if supporter_id
-    end
+      def supporter
+        supporter_id = create if validation.okay?
+        fetch(supporter_id) if supporter_id
+      end
 
-    def validation
-      @validation ||= SupporterValidator.execute(data)
-    end
+      def validation
+        @validation ||= SupporterValidator.execute(data)
+      end
 
-    def fields
-      validation.item
-    end
+      def fields
+        validation.item
+      end
 
-    def create
-      client.create(table, fields)
-    end
+      def create
+        client.create(table, fields)
+      end
 
-    def fetch(id)
-      client.fetch(table, id)
-    end
+      def fetch(id)
+        client.fetch(table, id)
+      end
 
-    def errors
-      validation.errors + client.errors
+      def errors
+        validation.errors + client.errors
+      end
     end
   end
 end
