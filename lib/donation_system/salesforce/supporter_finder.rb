@@ -36,7 +36,8 @@ module DonationSystem
       end
 
       def first_entered
-        search.sort_by { |item| item[SORT_FIELD] }.first if search
+        sorted = search.sort_by { |item| item[SORT_FIELD] } if search
+        sorted&.first
       end
 
       def expression

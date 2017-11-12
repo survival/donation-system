@@ -32,8 +32,8 @@ module DonationSystem
       def errors
         validation_errors = []
         validation_errors << :missing_data unless data
-        validation_errors << :invalid_last_name unless data && data.name
-        validation_errors << :invalid_email unless data && data.email
+        validation_errors << :invalid_last_name unless data&.name
+        validation_errors << :invalid_email unless data&.email
         validation_errors.compact
       end
     end

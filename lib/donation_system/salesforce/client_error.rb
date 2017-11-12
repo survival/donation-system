@@ -10,7 +10,7 @@ module DonationSystem
       private
 
       def error_collection
-        return [] unless client_error && client_error.response
+        return [] unless client_error&.response
         client_error.response.fetch(:body, [])
       end
 

@@ -46,7 +46,7 @@ module DonationSystem
       end
 
       def validate_amount
-        :invalid_amount unless data && data.amount && !data.amount.to_i.zero?
+        :invalid_amount unless data&.amount && !data.amount.to_i.zero?
       end
 
       def validate_account_id
