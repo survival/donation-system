@@ -51,7 +51,7 @@ module DonationSystem
       end
 
       def validate_currency
-        :missing_currency unless data&.currency
+        :invalid_currency unless data&.currency && currency?
       end
 
       def validate_token
@@ -69,6 +69,12 @@ module DonationSystem
       def number?
         BigDecimal(data.amount)
       rescue ArgumentError
+        false
+      end
+
+      def currency?
+        Money::Currency.new(data.currency)
+      rescue Money::Currency::UnknownCurrency
         false
       end
     end

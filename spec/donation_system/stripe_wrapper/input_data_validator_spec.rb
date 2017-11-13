@@ -74,7 +74,21 @@ module DonationSystem
           )
           result = validate(data)
           expect(result.item).to be_nil
-          expect(result.errors).to include(:missing_currency)
+          expect(result.errors).to include(:invalid_currency)
+        end
+
+        it 'handles invalid currency' do
+          data.currency = ''
+          result = validate(data)
+          expect(result.item).to be_nil
+          expect(result.errors).to include(:invalid_currency)
+        end
+
+        it 'handles unsupported currency' do
+          data.currency = 'unsupported'
+          result = validate(data)
+          expect(result.item).to be_nil
+          expect(result.errors).to include(:invalid_currency)
         end
 
         it 'handles missing token' do
