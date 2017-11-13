@@ -10,7 +10,7 @@ module DonationSystem
 
       let(:data) do
         RawInputData.new(
-          '1000', 'usd', 'stripe_token', 'user@example.com', 'Name'
+          '10.50', 'usd', 'stripe_token', 'user@example.com', 'Name'
         )
       end
       let(:result) { validate(data) }
@@ -18,7 +18,7 @@ module DonationSystem
 
       describe 'Stripe required fields' do
         it 'has required field amount' do
-          expect(fields[:amount]).to eq('1000')
+          expect(fields[:amount]).to eq(1050)
         end
 
         it 'has required field currency' do
@@ -52,7 +52,20 @@ module DonationSystem
           )
           result = validate(data)
           expect(result.item).to be_nil
-          expect(result.errors).to include(:missing_amount)
+          expect(result.errors).to include(:invalid_amount)
+        end
+
+        it 'handles invalid amount' do
+          data.amount = 'asdf'
+          result = validate(data)
+          expect(result.item).to be_nil
+          expect(result.errors).to include(:invalid_amount)
+        end
+
+        it 'handles valid but negative amount' do
+          data.amount = '-12.34567'
+          result = validate(data)
+          expect(result.item[:amount]).to eq(1235)
         end
 
         it 'handles missing currency' do
