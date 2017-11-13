@@ -7,6 +7,12 @@ module DonationSystem
   RSpec.describe ThankYouMailer do
     let(:email) { described_class.send_email('user@example.com', 'Firstname') }
 
+    it 'configures the mailer' do
+      allow(Mail).to receive(:defaults)
+      email
+      expect(Mail).to have_received(:defaults)
+    end
+
     it 'requires a from field' do
       expect(email.from).not_to be(nil)
     end
