@@ -47,9 +47,7 @@ module DonationSystem
         end
 
         it 'handles missing amount' do
-          data = RawInputData.new(
-            nil, 'usd', 'stripe_token', 'user@example.com', 'Name'
-          )
+          data.amount = nil
           result = validate(data)
           expect(result.item).to be_nil
           expect(result.errors).to include(:invalid_amount)
@@ -69,9 +67,7 @@ module DonationSystem
         end
 
         it 'handles missing currency' do
-          data = RawInputData.new(
-            '1000', nil, 'stripe_token', 'user@example.com', 'Name'
-          )
+          data.currency = nil
           result = validate(data)
           expect(result.item).to be_nil
           expect(result.errors).to include(:invalid_currency)
@@ -92,18 +88,14 @@ module DonationSystem
         end
 
         it 'handles missing token' do
-          data = RawInputData.new(
-            '1000', 'usd', nil, 'user@example.com', 'Name'
-          )
+          data.token = nil
           result = validate(data)
           expect(result.item).to be_nil
           expect(result.errors).to include(:missing_token)
         end
 
         it 'handles missing email' do
-          data = RawInputData.new(
-            '1000', 'usd', 'stripe_token', nil, 'Name'
-          )
+          data.email = nil
           result = validate(data)
           expect(result.item).to be_nil
           expect(result.errors).to include(:missing_email)

@@ -15,6 +15,14 @@ module DonationSystem
         )
       end
 
+      describe 'when successful', vcr: { record: :all } do
+        it 'succeeds with a valid API key and valid parameters' do
+          result = described_class.charge(data)
+          expect(result.item.status).to eq('succeeded')
+          expect(result.errors).to be_empty
+        end
+      end
+
       describe 'when unsuccessful', vcr: { record: :all } do
         include Support::WithEnv
 
@@ -51,16 +59,12 @@ module DonationSystem
         end
 
         it 'fails with a valid API key and invalid card number' do
-          data = RawStripeData.new(
-            '1000', 'usd', 'tok_chargeDeclined', 'user@test.com', 'foo'
-          )
+          data.token = 'tok_chargeDeclined'
           expect_charge_to_fail_with(:declined_card, data)
         end
 
         it 'fails with a valid API key and expired card' do
-          data = RawStripeData.new(
-            '1000', 'usd', 'tok_chargeDeclinedExpiredCard', 'user@test.com', 'foo'
-          )
+          data.token = 'tok_chargeDeclinedExpiredCard'
           expect_charge_to_fail_with(:declined_card, data)
         end
 
@@ -91,17 +95,6 @@ module DonationSystem
         it 'fails due to reasons unrelated to Stripe' do
           allow(Stripe::Charge).to receive(:create).and_raise(StandardError)
           expect_charge_to_fail_with(:unknown_error)
-        end
-      end
-
-      describe 'when successful', vcr: { record: :once } do
-        it 'succeeds with a valid API key and valid parameters' do
-          data = RawStripeData.new(
-            '1000', 'usd', 'tok_visa', 'user@example.com', 'Name'
-          )
-          result = described_class.charge(data)
-          expect(result.item.status).to eq('succeeded')
-          expect(result.errors).to be_empty
         end
       end
 
