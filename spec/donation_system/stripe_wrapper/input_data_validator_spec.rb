@@ -10,7 +10,7 @@ module DonationSystem
 
       let(:data) do
         RawInputData.new(
-          '1000', 'usd', 'stripe_token', 'user@example.com', 'Name'
+          '10.50', 'usd', 'stripe_token', 'user@example.com', 'Name'
         )
       end
       let(:result) { validate(data) }
@@ -18,7 +18,7 @@ module DonationSystem
 
       describe 'Stripe required fields' do
         it 'has required field amount' do
-          expect(fields[:amount]).to eq('1000')
+          expect(fields[:amount]).to eq(1050)
         end
 
         it 'has required field currency' do
@@ -47,36 +47,55 @@ module DonationSystem
         end
 
         it 'handles missing amount' do
-          data = RawInputData.new(
-            nil, 'usd', 'stripe_token', 'user@example.com', 'Name'
-          )
+          data.amount = nil
           result = validate(data)
           expect(result.item).to be_nil
-          expect(result.errors).to include(:missing_amount)
+          expect(result.errors).to include(:invalid_amount)
+        end
+
+        it 'handles invalid amount' do
+          data.amount = 'asdf'
+          result = validate(data)
+          expect(result.item).to be_nil
+          expect(result.errors).to include(:invalid_amount)
+        end
+
+        it 'handles valid but negative amount' do
+          data.amount = '-12.34567'
+          result = validate(data)
+          expect(result.item[:amount]).to eq(1235)
         end
 
         it 'handles missing currency' do
-          data = RawInputData.new(
-            '1000', nil, 'stripe_token', 'user@example.com', 'Name'
-          )
+          data.currency = nil
           result = validate(data)
           expect(result.item).to be_nil
-          expect(result.errors).to include(:missing_currency)
+          expect(result.errors).to include(:invalid_currency)
+        end
+
+        it 'handles invalid currency' do
+          data.currency = ''
+          result = validate(data)
+          expect(result.item).to be_nil
+          expect(result.errors).to include(:invalid_currency)
+        end
+
+        it 'handles unsupported currency' do
+          data.currency = 'unsupported'
+          result = validate(data)
+          expect(result.item).to be_nil
+          expect(result.errors).to include(:invalid_currency)
         end
 
         it 'handles missing token' do
-          data = RawInputData.new(
-            '1000', 'usd', nil, 'user@example.com', 'Name'
-          )
+          data.token = nil
           result = validate(data)
           expect(result.item).to be_nil
           expect(result.errors).to include(:missing_token)
         end
 
         it 'handles missing email' do
-          data = RawInputData.new(
-            '1000', 'usd', 'stripe_token', nil, 'Name'
-          )
+          data.email = nil
           result = validate(data)
           expect(result.item).to be_nil
           expect(result.errors).to include(:missing_email)

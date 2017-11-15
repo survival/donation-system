@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'money'
 require_relative 'result'
 
 module DonationSystem
@@ -24,7 +25,7 @@ module DonationSystem
       def fields
         return unless errors.empty?
         {
-          amount: data.amount,
+          amount: amount_in_cents,
           currency: data.currency,
           source: data.token,
           description: "Charge for #{data.email}"
@@ -46,11 +47,11 @@ module DonationSystem
       end
 
       def validate_amount
-        :missing_amount unless data&.amount
+        :invalid_amount unless data&.amount && number?
       end
 
       def validate_currency
-        :missing_currency unless data&.currency
+        :invalid_currency unless data&.currency && currency?
       end
 
       def validate_token
@@ -59,6 +60,22 @@ module DonationSystem
 
       def validate_email
         :missing_email unless data&.email
+      end
+
+      def amount_in_cents
+        Money.from_amount(BigDecimal(data.amount).abs, data.currency).cents
+      end
+
+      def number?
+        BigDecimal(data.amount)
+      rescue ArgumentError
+        false
+      end
+
+      def currency?
+        Money::Currency.new(data.currency)
+      rescue Money::Currency::UnknownCurrency
+        false
       end
     end
   end
