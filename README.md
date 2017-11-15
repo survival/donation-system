@@ -19,42 +19,36 @@ gem 'donation-system', git: 'https://github.com/survival/donation-system'
 
 and append `bundle exec` in front of any CLI command that requires this gem.
 
+
 # Development
 
 To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version. Then push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
+
 ## To initialise the project
 
-```bash
-bundle install
+You need to have `git` and `bundler` installed.
+
+Run the setup script (**Beware:** Needs permissions to access the credentials repo):
+
 ```
+. scripts/setup.sh
+```
+
+This script will:
+* download the credentials
+* run the credentials to set the environment
+* run `bundle install` to install gems.
+* run `bundle exec rake` to run the tests.
+
 
 ## Tests
 
-You need to set your environment with a `STRIPE_SECRET_KEY` variable equal to a valid Stripe API private test key before running the tests. For example:
+You need to set your environment by running the credentials. These will be run when you run the `setup.sh` script, but in any case before running the tests ensure that you remember to do:
 
-```bash
-export STRIPE_SECRET_KEY=blah
 ```
-
-You also need the following Salesforce environment variables:
-
-```bash
-export SALESFORCE_HOST='YOUR_SANDBOX'
-export SALESFORCE_USERNAME='YOUR_USERNAME'
-export SALESFORCE_PASSWORD='YOUR_PASSWORD'
-export SALESFORCE_SECURITY_TOKEN='YOUR_SECURITY_TOKEN'
-export SALESFORCE_CLIENT_ID='YOUR_CLIENT_ID'
-export SALESFORCE_CLIENT_SECRET='YOUR_CLIENT_SECRET'
-export SALESFORCE_API_VERSION="38.0"
-```
-
-Finally, you need to configure the mailer:
-
-```bash
-export EMAIL_SERVER='YOUR_EMAIL_SERVER'
-export EMAIL_USERNAME='YOUR_USERNAME'
-export EMAIL_PASSWORD='YOUR_PASSWORD'
+. credentials/.env_test
+. credentials/.email_server
 ```
 
 
@@ -82,12 +76,10 @@ bundle exec rspec path/to/test/file.rb:TESTLINENUMBER && rubocop
 
 ## Testing emails in production
 
-You can send an email to any email address using the `test_email_server.rb` script, and setting your email server, username and password, like this:
+You can send an email to any email address using the `test_email_server.rb` script, and making sure that you set your environment with an email server, username and password, by running the credentials:
 
 ```bash
-export EMAIL_SERVER='YOUR_EMAIL_SERVER'
-export EMAIL_USERNAME='YOUR_USERNAME'
-export EMAIL_PASSWORD='YOUR_PASSWORD'
+. credentials/.email_server
 bundle exec ruby scripts/test_email_server.rb 'YOUR_EMAIL_HERE'
 ```
 
