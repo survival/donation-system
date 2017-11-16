@@ -24,8 +24,6 @@ and append `bundle exec` in front of any CLI command that requires this gem.
 
 # Development
 
-To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version. Then push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
 
 ## To initialise the project
 
@@ -73,6 +71,29 @@ bundle exec rspec path/to/test/file.rb && rubocop
 
 ```bash
 bundle exec rspec path/to/test/file.rb:TESTLINENUMBER && rubocop
+```
+
+
+### To release a new version
+
+
+To release a new version, update the version number in `version.rb`, and describe your changes in the changelog. Then run:
+
+```bash
+git tag -a VERSION_HERE -m "DESCRIPTION_HERE"
+```
+
+which will create a git tag for the version. Then push git commits and tags:
+
+```bash
+git push origin master --tags
+```
+
+and push the `.gem` file to [rubygems.org](https://rubygems.org):
+
+```bash
+gem build donation_system.gemspec
+gem push donation_system-VERSION_HERE.gem
 ```
 
 
