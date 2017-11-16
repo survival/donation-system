@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/survival/donation-system.svg?branch=master)](https://travis-ci.org/survival/donation-system)
 [![Coverage Status](https://coveralls.io/repos/github/survival/donation-system/badge.svg)](https://coveralls.io/github/survival/donation-system)
+[![Dependency Status](https://gemnasium.com/badges/github.com/survival/donation-system.svg)](https://gemnasium.com/github.com/survival/donation-system)
+
 
 # Donation System
 
