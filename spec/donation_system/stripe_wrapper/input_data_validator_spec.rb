@@ -1,32 +1,26 @@
 # frozen_string_literal: true
 
+require 'donation_system/data_structs_for_tests'
 require 'donation_system/stripe_wrapper/input_data_validator'
 require 'spec_helper'
 
 module DonationSystem
   module StripeWrapper
     RSpec.describe InputDataValidator do
-      RawInputData = Struct.new(:amount, :currency, :token, :email, :name)
-
-      let(:data) do
-        RawInputData.new(
-          '10.50', 'usd', 'stripe_token', 'user@example.com', 'Name'
-        )
-      end
-      let(:result) { validate(data) }
-      let(:fields) { result.item }
-
       describe 'Stripe required fields' do
+        let(:result) { validate(VALID_REQUEST_DATA) }
+        let(:fields) { result.item }
+
         it 'has required field amount' do
-          expect(fields[:amount]).to eq(1050)
+          expect(fields[:amount]).to eq(1234)
         end
 
         it 'has required field currency' do
-          expect(fields[:currency]).to eq('usd')
+          expect(fields[:currency]).to eq('gbp')
         end
 
         it 'has required field Stripe token' do
-          expect(fields[:source]).to eq('stripe_token')
+          expect(fields[:source]).to eq('tok_visa')
         end
 
         it 'has optional field description with the donor email' do
@@ -35,9 +29,12 @@ module DonationSystem
       end
 
       describe 'validations' do
+        let(:data) { VALID_REQUEST_DATA.dup }
+
         it 'has no validation errors if data is present' do
+          result = validate(data)
           expect(result).to be_okay
-          expect(fields).not_to be_nil
+          expect(result.item).not_to be_nil
         end
 
         it 'handles null data' do

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'donation_system/data_structs_for_tests'
 require 'donation_system/stripe_wrapper/gateway'
 require 'spec_helper'
 require 'support/with_env'
@@ -7,15 +8,9 @@ require 'support/with_env'
 module DonationSystem
   module StripeWrapper
     RSpec.describe Gateway do
-      RawStripeData = Struct.new(:amount, :currency, :token, :email, :name)
+      let(:data) { VALID_REQUEST_DATA.dup }
 
-      let(:data) do
-        RawStripeData.new(
-          '12.345', 'usd', 'tok_visa', 'user@example.com', 'Name'
-        )
-      end
-
-      describe 'when successful', vcr: { record: :all } do
+      describe 'when successful', vcr: { record: :once } do
         it 'succeeds with a valid API key and valid parameters' do
           result = described_class.charge(data)
           expect(result.item.status).to eq('succeeded')
@@ -23,7 +18,7 @@ module DonationSystem
         end
       end
 
-      describe 'when unsuccessful', vcr: { record: :all } do
+      describe 'when unsuccessful', vcr: { record: :once } do
         include Support::WithEnv
 
         let(:stripe_endpoint) { 'https://api.stripe.com/v1/charges' }
@@ -33,7 +28,7 @@ module DonationSystem
           expect(result.item).to be_nil
           expect(result.errors).to include(:missing_data)
 
-          data = RawStripeData.new(nil, nil, nil, nil, nil)
+          data = RawRequestData.new
           result = described_class.charge(data)
           expect(result.item).to be_nil
           expect(result.errors).to include(:invalid_amount)
@@ -52,7 +47,9 @@ module DonationSystem
         end
 
         it 'fails with a valid API key but missing parameters' do
-          data = RawStripeData.new('1000', 'brl', '', '', '')
+          data = RawRequestData.new(
+            '1000', 'brl', '', '', '', '', '', '', '', '', ''
+          )
           result = described_class.charge(data)
           expect(result.item).to be_nil
           expect(result.errors).to include(:invalid_parameter)
