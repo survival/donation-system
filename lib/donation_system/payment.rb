@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'donation_data'
 require_relative 'salesforce/database'
 require_relative 'stripe_wrapper/gateway'
 require_relative 'thank_you_mailer'
@@ -16,12 +17,11 @@ module DonationSystem
 
     def attempt
       result = StripeWrapper::Gateway.charge(request_data)
-      if result.okay?
-        ThankYouMailer.send_email(request_data.email, request_data.name)
-        Salesforce::Database.add_donation(request_data)
-      else
-        result.errors
-      end
+      return result.errors unless result.okay?
+      ThankYouMailer.send_email(request_data.email, request_data.name)
+      Salesforce::Database.add_donation(
+        DonationData.new(request_data, result.item)
+      )
     end
 
     private
