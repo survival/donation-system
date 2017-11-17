@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'donation_system/salesforce/data_structs_for_tests'
+require 'donation_system/data_structs_for_tests'
 require 'donation_system/salesforce/supporter_validator'
 require 'spec_helper'
 
