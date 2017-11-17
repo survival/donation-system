@@ -1,19 +1,20 @@
 # frozen_string_literal: true
 
 require 'donation_system/data_structs_for_tests'
+require 'donation_system/donation_data'
 require 'donation_system/salesforce/supporter_creator'
 require 'spec_helper'
 
 module DonationSystem
   module Salesforce
     RSpec.describe SupporterCreator do
-      let(:data) { RawSupporterData.new('A Name', 'test@test.com') }
+      let(:data) { DonationData.new(VALID_REQUEST_DATA, VALID_PAYMENT_DATA) }
 
       describe 'when successful', vcr: { record: :once } do
         it 'creates a supporter' do
           result = create_supporter(data)
           expect(result).to be_okay
-          expect(result.item[:Email]).to eq('test@test.com')
+          expect(result.item[:Email]).to eq('user@example.com')
         end
       end
 
@@ -25,7 +26,7 @@ module DonationSystem
         end
 
         it 'fails if data is invalid' do
-          result = create_supporter(RawSupporterData.new(nil, nil))
+          result = create_supporter(nil)
           expect(result).not_to be_okay
           expect(result.item).to be_nil
         end

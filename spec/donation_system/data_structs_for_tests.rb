@@ -5,7 +5,6 @@ module DonationSystem
                               :name, :email,
                               :address, :city, :state, :zip, :country)
   RawPaymentData = Struct.new(:status)
-  RawSupporterData = Struct.new(:name, :email)
   RawDonationData = Struct.new(:amount)
   SupporterFake = Struct.new(:AccountId)
 
