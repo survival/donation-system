@@ -15,11 +15,11 @@ module DonationSystem
 
       describe 'Salesforce required fields' do
         it 'has required field amount' do
-          expect(fields[:Amount]).to eq('2000')
+          expect(fields[:Amount]).to eq('12.34')
         end
 
         it 'has required field closed date' do
-          expect(fields[:CloseDate]).to eq('2017-09-11')
+          expect(fields[:CloseDate]).to eq('2017-11-17')
         end
 
         it 'has required field name' do
@@ -34,6 +34,50 @@ module DonationSystem
       describe 'application required fields' do
         it 'has required field account id' do
           expect(fields[:AccountId]).to eq('1')
+        end
+      end
+
+      describe 'optional fields' do
+        it 'can have a currency' do
+          expect(fields[:CurrencyIsoCode]).to eq('GBP')
+        end
+
+        it 'can have the last 4 digits of the card' do
+          expect(fields[:Last_digits__c]).to eq('4242')
+        end
+
+        it 'can have a card brand number' do
+          expect(fields[:Card_type__c]).to eq('Visa')
+        end
+
+        it 'can have a transaction id' do
+          expect(fields[:Gateway_transaction_ID__c])
+            .to eq('ch_1BPDARGjXKYZTzxWrD35FFDc')
+        end
+
+        it 'can have a receiving organisation' do
+          expect(fields[:Receiving_Organization__c]).to eq('Survival UK')
+        end
+
+        it 'can have a payment method' do
+          expect(fields[:Payment_method__c]).to eq('Card (Stripe)')
+        end
+
+        it 'can have a record type id' do
+          expect(fields[:RecordTypeId]).to eq('01280000000Fvqi')
+        end
+
+        it 'can have a private field' do
+          expect(fields[:IsPrivate]).to eq(false)
+        end
+
+        it 'can have a gift aid information' do
+          expect(fields[:Gift_Aid__c]).to eq(true)
+          expect(fields[:Block_Gift_Aid_Reclaim__c]).to eq(false)
+        end
+
+        it 'can have a fundraising field' do
+          expect(fields[:Fundraising__c]).to eq(false)
         end
       end
 
@@ -52,6 +96,18 @@ module DonationSystem
           expect(result.errors).to include(:missing_data)
         end
 
+        it 'handles missing request data' do
+          result = validate(DonationData.new(nil, payment_data), supporter)
+          expect(result.item).to be_nil
+          expect(result.errors).to include(:missing_request_data)
+        end
+
+        it 'handles missing payment data' do
+          result = validate(DonationData.new(request_data, nil), supporter)
+          expect(result.item).to be_nil
+          expect(result.errors).to include(:missing_payment_data)
+        end
+
         it 'handles missing amount' do
           payment_data.amount = nil
           data = DonationData.new(request_data, payment_data)
@@ -66,6 +122,22 @@ module DonationSystem
           result = validate(data, supporter)
           expect(result.item).to be_nil
           expect(result.errors).to include(:invalid_amount)
+        end
+
+        it 'handles missing creation date' do
+          payment_data.created = nil
+          data = DonationData.new(request_data, payment_data)
+          result = validate(data, supporter)
+          expect(result.item).to be_nil
+          expect(result.errors).to include(:invalid_creation_date)
+        end
+
+        it 'handles invalid creation date' do
+          payment_data.created = 'asdf'
+          data = DonationData.new(request_data, payment_data)
+          result = validate(data, supporter)
+          expect(result.item).to be_nil
+          expect(result.errors).to include(:invalid_creation_date)
         end
 
         it 'handles missing supporter' do
