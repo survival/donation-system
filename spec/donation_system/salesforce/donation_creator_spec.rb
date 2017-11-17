@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 require 'donation_system/data_structs_for_tests'
+require 'donation_system/donation_data'
 require 'donation_system/salesforce/donation_creator'
 require 'spec_helper'
 
 module DonationSystem
   module Salesforce
     RSpec.describe DonationCreator do
-      let(:data) { RawDonationData.new('2000') }
+      let(:data) { DonationData.new(VALID_REQUEST_DATA, VALID_PAYMENT_DATA) }
       let(:supporter) { SupporterFake.new('0013D00000LBYutQAH') }
 
       describe 'when successful', vcr: { record: :once } do
