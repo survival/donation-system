@@ -36,8 +36,8 @@ module DonationSystem
       end
 
       def first_entered
-        sorted = search.sort_by { |item| item[SORT_FIELD] } if search
-        sorted&.first
+        sorted = search.sort_by { |item| item[SORT_FIELD] }
+        sorted.first
       end
 
       def expression
@@ -45,7 +45,7 @@ module DonationSystem
       end
 
       def search
-        @search ||= client.search(expression)
+        @search ||= client.search(expression) || []
       end
 
       def fetch(id)
