@@ -24,16 +24,16 @@ module DonationSystem
       def fields
         return unless errors.empty?
         {
-          LastName: data.name,
-          Email: data.email
+          LastName: data.request_data.name,
+          Email: data.request_data.email
         }
       end
 
       def errors
         validation_errors = []
         validation_errors << :missing_data unless data
-        validation_errors << :invalid_last_name unless data&.name
-        validation_errors << :invalid_email unless data&.email
+        validation_errors << :invalid_last_name unless data&.request_data&.name
+        validation_errors << :invalid_email unless data&.request_data&.email
         validation_errors.compact
       end
     end

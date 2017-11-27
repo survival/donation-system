@@ -25,7 +25,7 @@ module DonationSystem
       def fields
         return unless errors.empty?
         {
-          Amount: data.amount.to_s,
+          Amount: data.payment_data.amount.to_s,
           CloseDate: '2017-09-11',
           Name: 'Online donation',
           StageName: 'Received',
@@ -46,11 +46,17 @@ module DonationSystem
       end
 
       def validate_amount
-        :invalid_amount unless data&.amount && !data.amount.to_i.zero?
+        :invalid_amount unless data&.payment_data&.amount && integer_amount?
       end
 
       def validate_account_id
         :invalid_account_id unless supporter && supporter[:AccountId]
+      end
+
+      def integer_amount?
+        Integer(data.payment_data.amount)
+      rescue ArgumentError
+        false
       end
     end
   end

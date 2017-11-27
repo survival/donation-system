@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
-require 'donation_system/salesforce/data_structs_for_tests'
+require 'donation_system/data_structs_for_tests'
+require 'donation_system/donation_data'
 require 'donation_system/salesforce/donation_creator'
 require 'spec_helper'
 
 module DonationSystem
   module Salesforce
     RSpec.describe DonationCreator do
-      let(:data) { RawDonationData.new('2000') }
-      let(:supporter) { SupporterSObjectFake.new('0013D00000LBYutQAH') }
+      let(:data) { DonationData.new(VALID_REQUEST_DATA, VALID_PAYMENT_DATA) }
+      let(:supporter) { SupporterFake.new('0013D00000LBYutQAH') }
 
       describe 'when successful', vcr: { record: :once } do
         it 'creates a donation' do
@@ -32,7 +33,7 @@ module DonationSystem
         end
 
         it 'fails if there is a creation problem' do
-          result = create_donation(data, SupporterSObjectFake.new('1234'))
+          result = create_donation(data, SupporterFake.new('1234'))
           expect(result).not_to be_okay
           expect(result.item).to be_nil
         end

@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
+require 'donation_system/data_structs_for_tests'
+require 'donation_system/donation_data'
 require 'donation_system/salesforce/database'
 require 'donation_system/salesforce/result'
 require 'spec_helper'
 
 module DonationSystem
   module Salesforce
-    RawData = Struct.new(:email)
-
     RSpec.describe Database do
-      let(:data) { RawData.new('email@test.com') }
+      let(:data) { DonationData.new(VALID_REQUEST_DATA, VALID_PAYMENT_DATA) }
 
       describe 'when sucessful' do
         it 'creates a donation if supporter exists' do
@@ -35,12 +35,19 @@ module DonationSystem
 
       describe 'when unsuccessful' do
         it 'returns errors if email is not present' do
+          expect(described_class.add_donation(nil)).to eq([:missing_email])
+
           expect(described_class.add_donation('foo')).to eq([:missing_email])
+
+          data = DonationData.new(nil, VALID_PAYMENT_DATA)
+          expect(described_class.add_donation(data)).to eq([:missing_email])
         end
 
         it 'returns errors if email is null' do
-          expect(described_class.add_donation(RawData.new(nil)))
-            .to eq([:missing_email])
+          request_data = VALID_REQUEST_DATA.dup
+          request_data.email = nil
+          data = DonationData.new(request_data, VALID_PAYMENT_DATA)
+          expect(described_class.add_donation(data)).to eq([:missing_email])
         end
 
         it 'returns errors if problems with finder' do
