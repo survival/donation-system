@@ -41,7 +41,7 @@ module DonationSystem
         end
 
         it 'handles missing data' do
-          result = validate(nil, SupporterSObjectFake.new('1'))
+          result = validate(nil, SupporterFake.new('1'))
           expect(result.item).to be_nil
           expect(result.errors).to include(:missing_data)
         end
@@ -77,7 +77,7 @@ module DonationSystem
 
       def validate_values(values)
         data = RawDonationData.new(values[:amount])
-        supporter = SupporterSObjectFake.new(values[:account_id])
+        supporter = SupporterFake.new(values[:account_id])
         described_class.execute(data, supporter)
       end
     end

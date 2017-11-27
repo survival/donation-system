@@ -3,5 +3,5 @@
 module DonationSystem
   RawSupporterData = Struct.new(:name, :email)
   RawDonationData = Struct.new(:amount)
-  SupporterSObjectFake = Struct.new(:AccountId)
+  SupporterFake = Struct.new(:AccountId)
 end
