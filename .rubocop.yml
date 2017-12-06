@@ -10,6 +10,10 @@ Metrics/BlockLength:
     - 'spec/**/*.rb'
     - '*.gemspec'
 
+Metrics/ModuleLength:
+  Exclude:
+    - 'spec/**/*.rb'
+
 Metrics/LineLength:
   Max: 82
 
