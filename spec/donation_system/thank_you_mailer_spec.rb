@@ -5,7 +5,9 @@ require 'spec_helper'
 
 module DonationSystem
   RSpec.describe ThankYouMailer do
-    let(:email) { described_class.send_email('user@example.com', 'Firstname') }
+    let(:email) do
+      described_class.send_email('user@example.com', 'Firstname', :test)
+    end
 
     it 'configures the mailer' do
       allow(Mail).to receive(:defaults)

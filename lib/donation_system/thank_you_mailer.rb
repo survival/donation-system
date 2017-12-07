@@ -4,8 +4,8 @@ require 'mail'
 
 module DonationSystem
   class ThankYouMailer
-    def self.send_email(recipient, first_name)
-      configure
+    def self.send_email(recipient, first_name, protocol = :smtp)
+      configure(protocol)
       Mail.deliver do
         to recipient
         from 'info@survivalinternational.org'
@@ -14,10 +14,10 @@ module DonationSystem
       end
     end
 
-    def self.configure
+    def self.configure(protocol)
       Mail.defaults do
         delivery_method(
-          :smtp,
+          protocol,
           address: ENV['EMAIL_SERVER'],
           port: 587,
           user_name: ENV['EMAIL_USERNAME'],
