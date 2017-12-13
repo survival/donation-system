@@ -19,3 +19,7 @@ Metrics/LineLength:
 
 Style/RegexpLiteral:
   EnforcedStyle: percent_r
+
+Style/FormatStringToken:
+  Exclude:
+    - 'lib/donation_system/salesforce/donation_validator.rb'
