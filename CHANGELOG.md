@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
-## master (unreleased)
+## [0.2.0] - 2017-12-13
 ### Changed:
 * The tests now consistently use the same request object, which is equal to the one we are sending in the webapp
 * The Salesforce classes now receive both the request data and the payment data returned by the payment gateway.
