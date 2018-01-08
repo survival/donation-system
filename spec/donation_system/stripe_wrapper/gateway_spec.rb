@@ -48,7 +48,7 @@ module DonationSystem
 
         it 'fails with a valid API key but missing parameters' do
           data = RawRequestData.new(
-            '1000', 'brl', '', '', '', '', '', '', '', '', ''
+            'one-off', '1000', 'brl', '', '', '', '', '', '', '', '', ''
           )
           result = described_class.charge(data)
           expect(result.item).to be_nil

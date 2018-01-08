@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DonationSystem
-  RawRequestData = Struct.new(:amount, :currency, :giftaid, :token,
+  RawRequestData = Struct.new(:type, :amount, :currency, :giftaid, :token,
                               :name, :email,
                               :address, :city, :state, :zip, :country)
   OneOffPaymentData = Struct.new(:id, :status, :amount, :currency, :source,
@@ -22,7 +22,8 @@ module DonationSystem
   SupporterFake = Struct.new(:AccountId)
 
   VALID_REQUEST_DATA = RawRequestData.new(
-    '12.345', 'gbp', true, 'tok_visa', 'Firstname Lastname', 'user@example.com',
+    'one-off', '12.345', 'gbp', true, 'tok_visa',
+    'Firstname Lastname', 'user@example.com',
     'Address', 'City', 'State', 'Z1PC0D3', 'Country'
   ).freeze
 
