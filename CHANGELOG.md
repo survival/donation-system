@@ -5,6 +5,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## master - (unreleased)
+### Changed:
+- Since now there are two types of Stripe payment, the validator was moved one level up
+- The Stripe one-off class now uses the new template for Stripe resources
+- The Stripe one-off class was renamed from Gateway to OneOff
+- Separation of the Stripe validator into the validation part, which is the same for all Stripe objects, and the field-generation part, which is different per object.
+
+### Added:
+- An implementation of Stripe recurring donations
+- A new class for a generic payment gateway that selects between Stripe one-off or recurring.
+- A template for Stripe objects behavior which acts as a factory of Stripe objects
+- An extra parameter, `type` in the donation data struct (and test structs), to specify if the payment is a one-off or recurring donation.
+
 ## [0.2.0] - 2017-12-13
 ### Changed:
 * The tests now consistently use the same request object, which is equal to the one we are sending in the webapp
