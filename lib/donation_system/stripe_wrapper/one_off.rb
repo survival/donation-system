@@ -7,7 +7,7 @@ require_relative 'resource_creator'
 
 module DonationSystem
   module StripeWrapper
-    class Gateway
+    class OneOff
       def self.charge(data)
         new(data).charge
       end

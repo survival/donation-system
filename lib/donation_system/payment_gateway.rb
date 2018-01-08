@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'stripe_wrapper/gateway'
+require_relative 'stripe_wrapper/one_off'
 
 module DonationSystem
   class PaymentGateway
@@ -13,7 +13,7 @@ module DonationSystem
     end
 
     def charge
-      StripeWrapper::Gateway.charge(data)
+      StripeWrapper::OneOff.charge(data)
     end
 
     private

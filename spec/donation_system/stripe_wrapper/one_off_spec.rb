@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 require 'donation_system/data_structs_for_tests'
-require 'donation_system/stripe_wrapper/gateway'
+require 'donation_system/stripe_wrapper/one_off'
 require 'spec_helper'
 require 'support/with_env'
 
 module DonationSystem
   module StripeWrapper
-    RSpec.describe Gateway do
+    RSpec.describe OneOff do
       let(:data) { VALID_REQUEST_DATA.dup }
       let(:result) { Result.new({ id: 'id' }, []) }
 
