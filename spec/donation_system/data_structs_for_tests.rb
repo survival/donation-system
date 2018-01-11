@@ -27,7 +27,7 @@ module DonationSystem
     'Address', 'City', 'State', 'Z1PC0D3', 'Country'
   ).freeze
 
-  VALID_PAYMENT_DATA = OneOffPaymentData.new(
+  VALID_ONEOFF_PAYMENT_DATA = OneOffPaymentData.new(
     'ch_1BPDARGjXKYZTzxWrD35FFDc', 'succeeded', 1234, 'gbp',
     VALID_STRIPE_CARD_DATA, 1_510_917_211
   ).freeze

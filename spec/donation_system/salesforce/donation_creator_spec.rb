@@ -8,7 +8,9 @@ require 'spec_helper'
 module DonationSystem
   module Salesforce
     RSpec.describe DonationCreator do
-      let(:data) { DonationData.new(VALID_REQUEST_DATA, VALID_PAYMENT_DATA) }
+      let(:data) do
+        DonationData.new(VALID_REQUEST_DATA, VALID_ONEOFF_PAYMENT_DATA)
+      end
       let(:supporter) { SupporterFake.new('0013D00000LBYutQAH') }
 
       describe 'when successful', vcr: { record: :once } do

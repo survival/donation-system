@@ -8,7 +8,9 @@ require 'spec_helper'
 module DonationSystem
   module Salesforce
     RSpec.describe SupporterValidator do
-      let(:data) { DonationData.new(VALID_REQUEST_DATA, VALID_PAYMENT_DATA) }
+      let(:data) do
+        DonationData.new(VALID_REQUEST_DATA, VALID_ONEOFF_PAYMENT_DATA)
+      end
       let(:result) { validate(data) }
       let(:fields) { result.item }
 
@@ -85,14 +87,18 @@ module DonationSystem
 
         it 'handles missing last name' do
           request_data.name = nil
-          result = validate(DonationData.new(request_data, VALID_PAYMENT_DATA))
+          result = validate(
+            DonationData.new(request_data, VALID_ONEOFF_PAYMENT_DATA)
+          )
           expect(result.item).to be_nil
           expect(result.errors).to include(:invalid_last_name)
         end
 
         it 'handles missing email' do
           request_data.email = nil
-          result = validate(DonationData.new(request_data, VALID_PAYMENT_DATA))
+          result = validate(
+            DonationData.new(request_data, VALID_ONEOFF_PAYMENT_DATA)
+          )
           expect(result.item).to be_nil
           expect(result.errors).to include(:invalid_email)
         end

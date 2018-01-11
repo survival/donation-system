@@ -8,7 +8,9 @@ require 'spec_helper'
 module DonationSystem
   module Salesforce
     RSpec.describe DonationValidator do
-      let(:data) { DonationData.new(VALID_REQUEST_DATA, VALID_PAYMENT_DATA) }
+      let(:data) do
+        DonationData.new(VALID_REQUEST_DATA, VALID_ONEOFF_PAYMENT_DATA)
+      end
       let(:supporter) { SupporterFake.new('1') }
       let(:result) { validate(data, supporter) }
       let(:fields) { result.item }
@@ -83,7 +85,7 @@ module DonationSystem
 
       describe 'validations' do
         let(:request_data) { VALID_REQUEST_DATA.dup }
-        let(:payment_data) { VALID_PAYMENT_DATA.dup }
+        let(:payment_data) { VALID_ONEOFF_PAYMENT_DATA.dup }
 
         it 'has no validation errors if data is valid' do
           expect(result).to be_okay

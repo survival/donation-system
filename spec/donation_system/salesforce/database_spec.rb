@@ -9,7 +9,9 @@ require 'spec_helper'
 module DonationSystem
   module Salesforce
     RSpec.describe Database do
-      let(:data) { DonationData.new(VALID_REQUEST_DATA, VALID_PAYMENT_DATA) }
+      let(:data) do
+        DonationData.new(VALID_REQUEST_DATA, VALID_ONEOFF_PAYMENT_DATA)
+      end
 
       describe 'when sucessful' do
         it 'creates a donation if supporter exists' do
@@ -39,14 +41,14 @@ module DonationSystem
 
           expect(described_class.add_donation('foo')).to eq([:missing_email])
 
-          data = DonationData.new(nil, VALID_PAYMENT_DATA)
+          data = DonationData.new(nil, VALID_ONEOFF_PAYMENT_DATA)
           expect(described_class.add_donation(data)).to eq([:missing_email])
         end
 
         it 'returns errors if email is null' do
           request_data = VALID_REQUEST_DATA.dup
           request_data.email = nil
-          data = DonationData.new(request_data, VALID_PAYMENT_DATA)
+          data = DonationData.new(request_data, VALID_ONEOFF_PAYMENT_DATA)
           expect(described_class.add_donation(data)).to eq([:missing_email])
         end
 
