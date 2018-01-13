@@ -2,7 +2,7 @@
 
 require 'date'
 require 'money'
-require_relative 'result'
+require_relative '../result'
 
 module DonationSystem
   module Salesforce

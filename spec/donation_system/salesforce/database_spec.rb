@@ -2,8 +2,8 @@
 
 require 'donation_system/data_structs_for_tests'
 require 'donation_system/donation_data'
+require 'donation_system/result'
 require 'donation_system/salesforce/database'
-require 'donation_system/salesforce/result'
 require 'spec_helper'
 
 module DonationSystem

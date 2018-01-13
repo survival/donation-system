@@ -2,6 +2,7 @@
 
 require_relative 'client_api'
 require_relative 'donation_validator'
+require_relative '../result'
 
 module DonationSystem
   module Salesforce
