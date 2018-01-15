@@ -11,7 +11,7 @@ module DonationSystem
       let(:data) do
         DonationData.new(VALID_REQUEST_DATA, VALID_ONEOFF_PAYMENT_DATA)
       end
-      let(:supporter) { SupporterFake.new('1') }
+      let(:supporter) { SupporterFake.new('id', '1') }
       let(:result) { validate(data, supporter) }
       let(:fields) { result.item }
 
@@ -149,7 +149,7 @@ module DonationSystem
         end
 
         it 'handles invalid account id' do
-          result = validate(data, SupporterFake.new(nil))
+          result = validate(data, SupporterFake.new('id', nil))
           expect(result.item).to be_nil
           expect(result.errors).to include(:invalid_account_id)
         end

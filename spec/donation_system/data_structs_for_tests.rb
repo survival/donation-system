@@ -19,7 +19,7 @@ module DonationSystem
     end
   end
 
-  SupporterFake = Struct.new(:AccountId)
+  SupporterFake = Struct.new(:Id, :AccountId)
 
   VALID_REQUEST_DATA = RawRequestData.new(
     'one-off', '12.345', 'gbp', true, 'tok_visa',

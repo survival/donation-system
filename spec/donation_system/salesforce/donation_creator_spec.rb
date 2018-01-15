@@ -11,7 +11,7 @@ module DonationSystem
       let(:data) do
         DonationData.new(VALID_REQUEST_DATA, VALID_ONEOFF_PAYMENT_DATA)
       end
-      let(:supporter) { SupporterFake.new('0013D00000LBYutQAH') }
+      let(:supporter) { SupporterFake.new('id', '0013D00000LBYutQAH') }
 
       describe 'when successful', vcr: { record: :once } do
         it 'creates a donation' do
@@ -35,7 +35,7 @@ module DonationSystem
         end
 
         it 'fails if there is a creation problem' do
-          result = create_donation(data, SupporterFake.new('1234'))
+          result = create_donation(data, SupporterFake.new('id', '1234'))
           expect(result).not_to be_okay
           expect(result.item).to be_nil
         end
