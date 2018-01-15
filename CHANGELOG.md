@@ -11,12 +11,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - The Stripe one-off class now uses the new template for Stripe resources
 - The Stripe one-off class was renamed from Gateway to OneOff
 - Separation of the Stripe validator into the validation part, which is the same for all Stripe objects, and the field-generation part, which is different per object.
+- The donation validator in Salesforce checks if the payment is one-off or recurring, in order to generate the right fields to create a donation in Salesforce.
+- Salesforce classes now use the upper level result struct.
 
 ### Added:
 - An implementation of Stripe recurring donations
 - A new class for a generic payment gateway that selects between Stripe one-off or recurring.
 - A template for Stripe objects behavior which acts as a factory of Stripe objects
 - An extra parameter, `type` in the donation data struct (and test structs), to specify if the payment is a one-off or recurring donation.
+- An adapter to convert payment objects obtained from the different payment gateways into an object that Salesforce classes can use to generate the relevant fields
+- A donation-fields generator in Salesforce, extracted out of the old validator. It generates the relevant fields for a one-off or recurring donation.
 
 ## [0.2.0] - 2017-12-13
 ### Changed:
