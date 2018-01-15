@@ -57,4 +57,28 @@ module DonationSystem
     'Visa', 'Card (Stripe)', '01280000000Fvsz', 'MC123456789',
     8, 2100, 1_510_917_211, nil, nil, nil, nil
   ).freeze
+
+  ChargeSourceFake = Struct.new(:last4, :brand)
+  ChargeMetadataFake = Struct.new(:number)
+  StripeChargeFake = Struct.new(
+    :id, :amount, :currency, :created, :status, :source, :metadata
+  )
+  VALID_STRIPE_CHARGE = StripeChargeFake.new(
+    'ch_1BPDARGjXKYZTzxWrD35FFDc', 1234, 'gbp', 1_510_917_211, 'succeeded',
+    ChargeSourceFake.new('4242', 'Visa'), ChargeMetadataFake.new('P123456789')
+  )
+
+  SubscriptionPlanFake = Struct.new(:amount, :currency)
+  SubscriptionMetadataFake = Struct.new(
+    :last4, :brand, :expiry_month, :expiry_year, :number
+  )
+  StripeSubscriptionFake = Struct.new(
+    :id, :created, :status, :plan, :metadata, :current_period_start
+  )
+  VALID_STRIPE_SUBSCRIPTION = StripeSubscriptionFake.new(
+    'sub_C6wrGA60bGiHfV', 1_510_917_211, 'active',
+    SubscriptionPlanFake.new(1234, 'gbp'),
+    SubscriptionMetadataFake.new('4242', 'Visa', '8', '2100', 'MC123456789'),
+    1_510_917_211
+  )
 end

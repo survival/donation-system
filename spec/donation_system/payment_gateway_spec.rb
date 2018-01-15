@@ -18,8 +18,15 @@ module DonationSystem
       before { data.type = InputDataValidator::VALID_TYPES[:oneoff] }
 
       it 'uses a one-off gateway' do
-        expect(StripeWrapper::OneOff).to receive(:charge)
+        result = Result.new(VALID_STRIPE_CHARGE, [])
+        expect(StripeWrapper::OneOff).to receive(:charge).and_return(result)
         described_class.charge(data)
+      end
+
+      it 'returns an adapter' do
+        result = Result.new(VALID_STRIPE_CHARGE, [])
+        allow(StripeWrapper::OneOff).to receive(:charge).and_return(result)
+        expect(described_class.charge(data).item.oneoff?).to eq(true)
       end
 
       it 'returns no errors when payment is OK' do
@@ -39,8 +46,15 @@ module DonationSystem
       before { data.type = InputDataValidator::VALID_TYPES[:recurring] }
 
       it 'uses a recurring gateway' do
-        expect(StripeWrapper::Recurring).to receive(:charge)
+        result = Result.new(VALID_STRIPE_SUBSCRIPTION, [])
+        expect(StripeWrapper::Recurring).to receive(:charge).and_return(result)
         described_class.charge(data)
+      end
+
+      it 'returns an adapter' do
+        result = Result.new(VALID_STRIPE_SUBSCRIPTION, [])
+        allow(StripeWrapper::Recurring).to receive(:charge).and_return(result)
+        expect(described_class.charge(data).item.oneoff?).to eq(false)
       end
 
       it 'returns no errors when payment is OK' do
