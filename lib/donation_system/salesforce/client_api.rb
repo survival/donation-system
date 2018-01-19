@@ -26,6 +26,9 @@ module DonationSystem
       rescue Faraday::ClientError => error
         save_client_error(error)
         nil
+      rescue StandardError
+        @errors << :unknown_salesforce_error
+        nil
       end
 
       def fetch(table, id)
