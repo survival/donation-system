@@ -22,4 +22,4 @@ Style/RegexpLiteral:
 
 Style/FormatStringToken:
   Exclude:
-    - 'lib/donation_system/salesforce/donation_validator.rb'
+    - 'lib/donation_system/salesforce/donation_fields_generator.rb'

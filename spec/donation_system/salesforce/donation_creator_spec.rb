@@ -11,10 +11,21 @@ module DonationSystem
       let(:data) do
         DonationData.new(VALID_REQUEST_DATA, VALID_ONEOFF_PAYMENT_DATA)
       end
-      let(:supporter) { SupporterFake.new('id', '0013D00000LBYutQAH') }
+      let(:supporter) do
+        SupporterFake.new('0033D00000MvZ4NQAV', '0013D00000LBYutQAH')
+      end
 
       describe 'when successful', vcr: { record: :once } do
-        it 'creates a donation' do
+        it 'creates a one-off donation' do
+          result = create_donation(data, supporter)
+          expect(result).to be_okay
+          expect(result.item).not_to be_nil
+        end
+
+        it 'creates a recurring donation' do
+          data = DonationData.new(
+            VALID_REQUEST_DATA, VALID_RECURRING_PAYMENT_DATA
+          )
           result = create_donation(data, supporter)
           expect(result).to be_okay
           expect(result.item).not_to be_nil

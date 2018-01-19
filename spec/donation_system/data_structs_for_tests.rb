@@ -4,8 +4,28 @@ module DonationSystem
   RawRequestData = Struct.new(:type, :amount, :currency, :giftaid, :token,
                               :name, :email,
                               :address, :city, :state, :zip, :country)
-  OneOffPaymentData = Struct.new(:id, :status, :amount, :currency, :source,
-                                 :created)
+  OneOffPaymentData = Struct.new(
+    :id, :amount, :currency, :created, :last4, :brand, :method, :record_type_id,
+    :number
+  ) do
+    def received?
+      true
+    end
+
+    def oneoff?
+      true
+    end
+  end
+
+  RecurringPaymentData = Struct.new(
+    :id, :amount, :currency, :created, :last4, :brand, :method, :record_type_id,
+    :number, :expiry_month, :expiry_year, :start_date, :reference,
+    :collection_day, :mandate_method, :account_holder_name
+  ) do
+    def oneoff?
+      false
+    end
+  end
 
   StripePlanFake = Struct.new(:id)
 
@@ -28,7 +48,13 @@ module DonationSystem
   ).freeze
 
   VALID_ONEOFF_PAYMENT_DATA = OneOffPaymentData.new(
-    'ch_1BPDARGjXKYZTzxWrD35FFDc', 'succeeded', 1234, 'gbp',
-    VALID_STRIPE_CARD_DATA, 1_510_917_211
+    'ch_1BPDARGjXKYZTzxWrD35FFDc', 1234, 'gbp', 1_510_917_211, '4242',
+    'Visa', 'Card (Stripe)', '01280000000Fvqi', 'P123456789'
+  ).freeze
+
+  VALID_RECURRING_PAYMENT_DATA = RecurringPaymentData.new(
+    'sub_C6wrGA60bGiHfV', 1234, 'gbp', 1_510_917_211, '4242',
+    'Visa', 'Card (Stripe)', '01280000000Fvsz', 'MC123456789',
+    8, 2100, 1_510_917_211, nil, nil, nil, nil
   ).freeze
 end

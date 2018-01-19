@@ -26,7 +26,7 @@ module DonationSystem
       attr_reader :client, :data, :supporter
 
       def table
-        'Opportunity'
+        validation.item.table
       end
 
       def donation
@@ -39,7 +39,7 @@ module DonationSystem
       end
 
       def fields
-        validation.item
+        validation.item.fields
       end
 
       def create
