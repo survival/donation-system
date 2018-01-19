@@ -19,7 +19,7 @@ module DonationSystem
         described_class.adapt(stripe_charge_fake)
       end
 
-      it_behaves_like 'Salesforce payment data'
+      it_behaves_like 'Salesforce one-off payment data'
 
       it 'works with the real object to adapt', vcr: { record: :once } do
         charge = DonationSystem::StripeWrapper::OneOff.charge(VALID_REQUEST_DATA)

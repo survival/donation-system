@@ -4,7 +4,7 @@ require 'spec_helper'
 
 module DonationSystem
   module Adapters
-    RSpec.shared_examples 'Salesforce payment data' do
+    RSpec.shared_examples 'Salesforce one-off payment data' do
       it 'responds to id' do
         expect(payment_data.id).not_to be_nil
       end
@@ -47,6 +47,36 @@ module DonationSystem
 
       it 'responds to oneoff?' do
         expect(payment_data.oneoff?).not_to be_nil
+      end
+    end
+
+    RSpec.shared_examples 'Salesforce recurring payment data' do
+      it 'responds to expiry month' do
+        expect(payment_data.expiry_month).to eq('8')
+      end
+
+      it 'responds to expiry year' do
+        expect(payment_data.expiry_year).to eq('2100')
+      end
+
+      it 'responds to start_date' do
+        expect(payment_data.start_date > 1_000_000_000).to be_truthy
+      end
+
+      it 'responds to reference' do
+        expect(payment_data).to respond_to(:reference)
+      end
+
+      it 'responds to collection_day' do
+        expect(payment_data).to respond_to(:collection_day)
+      end
+
+      it 'responds to mandate_method' do
+        expect(payment_data).to respond_to(:mandate_method)
+      end
+
+      it 'responds to account_holder_name' do
+        expect(payment_data).to respond_to(:account_holder_name)
       end
     end
   end
