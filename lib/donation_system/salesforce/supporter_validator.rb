@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'date'
-require_relative 'result'
+require_relative '../result'
 
 module DonationSystem
   module Salesforce

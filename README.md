@@ -29,13 +29,13 @@ and run `bundle install`. Then append `bundle exec` in front of any CLI command 
 require 'donation_system'
 
 Data = Struct.new(
-  :amount, :currency, :giftaid, :token,
+  :type, :amount, :currency, :giftaid, :token,
   :name, :email,
   :address, :city, :state, :zip, :country
 )
 
 data = Data.new(
-  '10.50', 'gbp', true, 'tok_visa',
+  'one-off', '10.50', 'gbp', true, 'tok_visa',
   'Jane Doe', 'jane@doe.com',
   'Main Street, 1', 'London', 'London', 'Z1PC0D3', 'UK'
 )
@@ -56,6 +56,7 @@ If there are no errors, it means that:
 
 The `data` that the gem consumes can be anything that responds to at least the following (all these should return strings except the giftaid, which is a boolean):
 
+* `data.type`: The type of donation. Valid values: `'one-off'` for one-off donations or `'recurring'` for recurring dontaions.
 * `data.amount`: The amount of money to be donated, in currency units. This can be an amount with cents, and will be converted to cents by the gem. For example: 10.50
 * `data.currency`: The currency that the amount is in, should be a valid ISO 4217 code for currencies and supported by the Money gem, which is used by this gem to handle money. [Check here for a list of supported currencies in JSON format](https://github.com/RubyMoney/money/tree/e2773f7859b268965fa003e2630ed58e7e96ac58/config)
 * `data.giftaid`: This can be true or false, depending if you allow the donors to [Gift Aid](https://en.wikipedia.org/wiki/Gift_Aid) their donation to you

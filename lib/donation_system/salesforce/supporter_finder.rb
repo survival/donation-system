@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'client_api'
+require_relative '../result'
 
 module DonationSystem
   module Salesforce

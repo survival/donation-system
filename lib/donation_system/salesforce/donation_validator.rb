@@ -2,11 +2,16 @@
 
 require 'date'
 require 'money'
-require_relative 'result'
+
+require_relative '../result'
+require_relative 'donation_fields_generator'
 
 module DonationSystem
   module Salesforce
     class DonationValidator
+      ONEOFF_TABLE = 'Opportunity'
+      RECURRING_TABLE = 'Regular_Donation__c'
+
       def self.execute(data, supporter)
         new(data, supporter).execute
       end
@@ -17,49 +22,17 @@ module DonationSystem
       end
 
       def execute
-        Result.new(fields, errors)
+        Result.new(item, errors)
       end
 
       private
 
       attr_reader :data, :supporter
 
-      def fields
+      def item
         return unless errors.empty?
-        required_data
-          .merge(card_data)
-          .merge(extra_fields)
-      end
-
-      def required_data
-        {
-          Amount: amount_in_currency_units,
-          CloseDate: format_time(data.payment_data.created),
-          Name: 'Online donation',
-          StageName: 'Received',
-          AccountId: supporter[:AccountId]
-        }
-      end
-
-      def card_data
-        {
-          CurrencyIsoCode: data.payment_data.currency&.upcase,
-          Last_digits__c: data.payment_data.source&.last4,
-          Card_type__c: data.payment_data.source&.brand,
-          Gateway_transaction_ID__c: data.payment_data.id,
-          Receiving_Organization__c: 'Survival UK',
-          Payment_method__c: 'Card (Stripe)',
-          RecordTypeId: '01280000000Fvqi'
-        }
-      end
-
-      def extra_fields
-        {
-          IsPrivate: false,
-          Gift_Aid__c: data.request_data.giftaid,
-          Block_Gift_Aid_Reclaim__c: false,
-          Fundraising__c: false
-        }
+        return item_for_oneoff if payment_data.oneoff?
+        item_for_recurring
       end
 
       def errors
@@ -99,20 +72,33 @@ module DonationSystem
         :invalid_account_id unless supporter && supporter[:AccountId]
       end
 
-      def format_time(seconds_since_epoch)
-        Time.at(seconds_since_epoch).strftime('%Y-%m-%d')
-      end
-
       def integer?(number)
         Integer(number)
       rescue ArgumentError
         false
       end
 
-      def amount_in_currency_units
-        I18n.enforce_available_locales = false
-        Money.new(data.payment_data.amount, data.payment_data.currency).to_s
+      def request_data
+        data.request_data
       end
+
+      def payment_data
+        data.payment_data
+      end
+
+      def item_for_oneoff
+        TableAndFields.new(ONEOFF_TABLE, fields_generator.for_oneoff)
+      end
+
+      def item_for_recurring
+        TableAndFields.new(RECURRING_TABLE, fields_generator.for_recurring)
+      end
+
+      def fields_generator
+        DonationFieldsGenerator.new(request_data, payment_data, supporter)
+      end
+
+      TableAndFields = Struct.new(:table, :fields)
     end
   end
 end

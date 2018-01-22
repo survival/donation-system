@@ -10,17 +10,17 @@ module DonationSystem
 
     describe 'when the gateway is unsuccessful' do
       it 'returns the gateway error' do
-        result = StripeWrapper::Result.new(nil, [:error])
-        allow(StripeWrapper::Gateway).to receive(:charge).and_return(result)
+        result = Result.new(nil, [:error])
+        allow(PaymentGateway).to receive(:charge).and_return(result)
         expect(described_class.attempt(request_data)).to eq([:error])
       end
     end
 
     describe 'when the gateway is successful' do
-      let(:result) { StripeWrapper::Result.new('stripe_result', []) }
+      let(:result) { Result.new('stripe_result', []) }
 
       before do
-        allow(StripeWrapper::Gateway).to receive(:charge).and_return(result)
+        allow(PaymentGateway).to receive(:charge).and_return(result)
         allow(ThankYouMailer).to receive(:send_email)
         allow(Salesforce::Database).to receive(:add_donation).and_return([])
       end

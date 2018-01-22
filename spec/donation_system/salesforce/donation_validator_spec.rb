@@ -8,82 +8,28 @@ require 'spec_helper'
 module DonationSystem
   module Salesforce
     RSpec.describe DonationValidator do
-      let(:data) { DonationData.new(VALID_REQUEST_DATA, VALID_PAYMENT_DATA) }
-      let(:supporter) { SupporterFake.new('1') }
+      let(:data) do
+        DonationData.new(VALID_REQUEST_DATA, VALID_ONEOFF_PAYMENT_DATA)
+      end
+      let(:supporter) { SupporterFake.new('id', '1') }
       let(:result) { validate(data, supporter) }
-      let(:fields) { result.item }
+      let(:fields) { result.item.fields }
 
-      describe 'Salesforce required fields' do
-        it 'has required field amount' do
-          expect(fields[:Amount]).to eq('12.34')
-        end
-
-        it 'has required field closed date' do
-          expect(fields[:CloseDate]).to eq('2017-11-17')
-        end
-
-        it 'has required field name' do
-          expect(fields[:Name]).to eq('Online donation')
-        end
-
-        it 'has required field stage name' do
-          expect(fields[:StageName]).to eq('Received')
-        end
+      it 'returns fields for one-off if one-off donation' do
+        expect(fields[:Web_Payment_Number__c]).not_to be_nil
+        expect(result.item.table).to eq(described_class::ONEOFF_TABLE)
       end
 
-      describe 'application required fields' do
-        it 'has required field account id' do
-          expect(fields[:AccountId]).to eq('1')
-        end
-      end
-
-      describe 'optional fields' do
-        it 'can have a currency' do
-          expect(fields[:CurrencyIsoCode]).to eq('GBP')
-        end
-
-        it 'can have the last 4 digits of the card' do
-          expect(fields[:Last_digits__c]).to eq('4242')
-        end
-
-        it 'can have a card brand number' do
-          expect(fields[:Card_type__c]).to eq('Visa')
-        end
-
-        it 'can have a transaction id' do
-          expect(fields[:Gateway_transaction_ID__c])
-            .to eq('ch_1BPDARGjXKYZTzxWrD35FFDc')
-        end
-
-        it 'can have a receiving organisation' do
-          expect(fields[:Receiving_Organization__c]).to eq('Survival UK')
-        end
-
-        it 'can have a payment method' do
-          expect(fields[:Payment_method__c]).to eq('Card (Stripe)')
-        end
-
-        it 'can have a record type id' do
-          expect(fields[:RecordTypeId]).to eq('01280000000Fvqi')
-        end
-
-        it 'can have a private field' do
-          expect(fields[:IsPrivate]).to eq(false)
-        end
-
-        it 'can have a gift aid information' do
-          expect(fields[:Gift_Aid__c]).to eq(true)
-          expect(fields[:Block_Gift_Aid_Reclaim__c]).to eq(false)
-        end
-
-        it 'can have a fundraising field' do
-          expect(fields[:Fundraising__c]).to eq(false)
-        end
+      it 'returns fields for recurring if recurring donation' do
+        data = DonationData.new(VALID_REQUEST_DATA, VALID_RECURRING_PAYMENT_DATA)
+        result = validate(data, supporter)
+        expect(result.item.fields[:Web_Mandate_Number__c]).not_to be_nil
+        expect(result.item.table).to eq(described_class::RECURRING_TABLE)
       end
 
       describe 'validations' do
         let(:request_data) { VALID_REQUEST_DATA.dup }
-        let(:payment_data) { VALID_PAYMENT_DATA.dup }
+        let(:payment_data) { VALID_ONEOFF_PAYMENT_DATA.dup }
 
         it 'has no validation errors if data is valid' do
           expect(result).to be_okay
@@ -147,7 +93,7 @@ module DonationSystem
         end
 
         it 'handles invalid account id' do
-          result = validate(data, SupporterFake.new(nil))
+          result = validate(data, SupporterFake.new('id', nil))
           expect(result.item).to be_nil
           expect(result.errors).to include(:invalid_account_id)
         end

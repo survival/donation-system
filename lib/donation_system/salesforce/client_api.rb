@@ -2,7 +2,7 @@
 
 require 'restforce'
 require_relative 'client_error'
-require_relative 'result'
+require_relative '../result'
 
 module DonationSystem
   module Salesforce
@@ -25,6 +25,9 @@ module DonationSystem
         client.create!(table, sobject_fields)
       rescue Faraday::ClientError => error
         save_client_error(error)
+        nil
+      rescue StandardError
+        @errors << :unknown_salesforce_error
         nil
       end
 

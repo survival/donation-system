@@ -16,10 +16,12 @@ Metrics/ModuleLength:
 
 Metrics/LineLength:
   Max: 82
+  Exclude:
+    - 'lib/donation_system/payment_gateway.rb'
 
 Style/RegexpLiteral:
   EnforcedStyle: percent_r
 
 Style/FormatStringToken:
   Exclude:
-    - 'lib/donation_system/salesforce/donation_validator.rb'
+    - 'lib/donation_system/salesforce/donation_fields_generator.rb'
