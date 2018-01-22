@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
-## master - (unreleased)
+## [1.0.0] - 2018-01-22
 ### Changed:
 - Since now there are two types of Stripe payment, the validator was moved one level up
 - The Stripe one-off class now uses the new template for Stripe resources
