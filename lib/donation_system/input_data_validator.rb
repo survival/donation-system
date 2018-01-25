@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'money'
-require_relative 'result'
 
 module DonationSystem
   class InputDataValidator

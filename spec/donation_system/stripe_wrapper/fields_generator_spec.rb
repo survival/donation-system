@@ -14,11 +14,11 @@ module DonationSystem
       describe 'fields for Charge' do
         let(:fields) { generator.for_charge }
 
-        it 'has required field amount' do
+        it 'has required field amount in cents as an integer' do
           expect(fields[:amount]).to eq(1234)
         end
 
-        it 'has required field currency' do
+        it 'has required field currency with any case' do
           expect(fields[:currency]).to eq('gbp')
         end
 
@@ -42,7 +42,7 @@ module DonationSystem
           expect(fields[:name]).to eq('Mandate MC000000000')
         end
 
-        it 'has required field amount' do
+        it 'has required field amount in cents as an integer' do
           expect(fields[:amount]).to eq(1234)
         end
 

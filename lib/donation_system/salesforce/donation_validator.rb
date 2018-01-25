@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'date'
-require 'money'
-
 require_relative '../result'
 require_relative 'donation_fields_generator'
 
