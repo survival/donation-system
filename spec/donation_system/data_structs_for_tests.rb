@@ -49,6 +49,14 @@ module DonationSystem
     'stripe'
   ).freeze
 
+  PaypalToken = Struct.new(:payment_id, :payer_id)
+  paypal_token = PaypalToken.new('PAY-13J25512E99606838LJU7M4Y', 'DUFRQ8GWYMJXC')
+  VALID_REQUEST_DATA_PAYPAL = RawRequestData.new(
+    'one-off', '12.345', 'gbp', true, paypal_token,
+    nil, '', nil, nil, nil, nil, nil,
+    'paypal'
+  ).freeze
+
   VALID_ONEOFF_PAYMENT_DATA = OneOffPaymentData.new(
     'ch_1BPDARGjXKYZTzxWrD35FFDc', 1234, 'gbp', 1_510_917_211, '4242',
     'Visa', 'Card (Stripe)', '01280000000Fvqi', 'P123456789'
@@ -88,4 +96,10 @@ module DonationSystem
   VALID_PAYPAL_CREATOR_DATA = PaypalCreatorData.new(
     '12.345', 'gbp', 'https://your-return-url.com', 'https://your-cancel-url.com'
   ).freeze
+
+  PaypalPaymentFake = Struct.new(:payment_id, :error) do
+    def execute(_payer_id)
+      true
+    end
+  end
 end
