@@ -3,7 +3,8 @@
 module DonationSystem
   RawRequestData = Struct.new(:type, :amount, :currency, :giftaid, :token,
                               :name, :email,
-                              :address, :city, :state, :zip, :country)
+                              :address, :city, :state, :zip, :country,
+                              :method)
   OneOffPaymentData = Struct.new(
     :id, :amount, :currency, :created, :last4, :brand, :method, :record_type_id,
     :number
@@ -44,7 +45,8 @@ module DonationSystem
   VALID_REQUEST_DATA = RawRequestData.new(
     'one-off', '12.345', 'gbp', true, 'tok_visa',
     'Firstname Lastname', 'user@example.com',
-    'Address', 'City', 'State', 'Z1PC0D3', 'Country'
+    'Address', 'City', 'State', 'Z1PC0D3', 'Country',
+    'stripe'
   ).freeze
 
   VALID_ONEOFF_PAYMENT_DATA = OneOffPaymentData.new(
