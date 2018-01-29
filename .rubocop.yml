@@ -16,8 +16,6 @@ Metrics/ModuleLength:
 
 Metrics/LineLength:
   Max: 82
-  Exclude:
-    - 'lib/donation_system/payment_gateway.rb'
 
 Style/RegexpLiteral:
   EnforcedStyle: percent_r
