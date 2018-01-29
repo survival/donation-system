@@ -83,4 +83,9 @@ module DonationSystem
     SubscriptionMetadataFake.new('4242', 'Visa', '8', '2100', 'MC123456789'),
     1_510_917_211
   )
+
+  PaypalCreatorData = Struct.new(:amount, :currency, :return_url, :cancel_url)
+  VALID_PAYPAL_CREATOR_DATA = PaypalCreatorData.new(
+    '12.345', 'gbp', 'https://your-return-url.com', 'https://your-cancel-url.com'
+  ).freeze
 end
