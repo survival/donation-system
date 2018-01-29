@@ -17,7 +17,7 @@ module DonationSystem
       describe 'when successful', vcr: { record: :once } do
         it 'executes the payment' do
           allow(PayPal::SDK::REST::DataTypes::Payment)
-            .to receive(:find).and_return(PaypalPaymentFake.new('id', nil))
+            .to receive(:find).and_return(VALID_PAYPAL_PAYMENT)
           expect(result).to be_okay
         end
       end
