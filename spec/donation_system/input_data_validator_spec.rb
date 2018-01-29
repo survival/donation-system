@@ -68,6 +68,16 @@ module DonationSystem
       expect_validation_to_fail_with(:missing_email)
     end
 
+    it 'handles missing donation method' do
+      data.method = nil
+      expect_validation_to_fail_with(:invalid_donation_method)
+    end
+
+    it 'handles invalid donation method' do
+      data.method = 'invalid donation method'
+      expect_validation_to_fail_with(:invalid_donation_method)
+    end
+
     def expect_validation_to_fail_with(error)
       result = validate(data)
       expect(result.errors).to include(error)

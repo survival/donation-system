@@ -25,3 +25,7 @@ Style/RegexpLiteral:
 Style/FormatStringToken:
   Exclude:
     - 'lib/donation_system/salesforce/donation_fields_generator.rb'
+
+Metrics/AbcSize:
+  Exclude:
+    - 'lib/donation_system/input_data_validator.rb'
