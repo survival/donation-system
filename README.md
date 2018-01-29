@@ -31,13 +31,15 @@ require 'donation_system'
 Data = Struct.new(
   :type, :amount, :currency, :giftaid, :token,
   :name, :email,
-  :address, :city, :state, :zip, :country
+  :address, :city, :state, :zip, :country,
+  :method
 )
 
 data = Data.new(
   'one-off', '10.50', 'gbp', true, 'tok_visa',
   'Jane Doe', 'jane@doe.com',
-  'Main Street, 1', 'London', 'London', 'Z1PC0D3', 'UK'
+  'Main Street, 1', 'London', 'London', 'Z1PC0D3', 'UK',
+  'stripe'
 )
 
 errors = DonationSystem::Payment.attempt(data)
@@ -68,6 +70,7 @@ The `data` that the gem consumes can be anything that responds to at least the f
 * `data.state`: the state of the donor
 * `data.zip`: the zip code of the donor
 * `data.country`: the country of the donor
+* `data.method`: the payment method. Valid values: `'stripe'` for Stripe donations or `'paypal'` for PayPal donations.
 
 
 ## Credentials
@@ -79,6 +82,14 @@ For the gem to work you need to set some environment variables:
     ```bash
     export STRIPE_SECRET_KEY=...
     export STRIPE_PUBLIC_KEY=...
+    ```
+
+1. The PayPal API keys of your PayPal account:
+
+    ```bash
+    export PAYPAL_MODE=... # 'sandbox' or 'live' only
+    export PAYPAL_CLIENT_ID=...
+    export PAYPAL_CLIENT_SECRET=...
     ```
 
 1. Your email server data:
@@ -101,11 +112,29 @@ For the gem to work you need to set some environment variables:
     export SALESFORCE_API_VERSION=...
     ```
 
-These variables are set in Travis and Heroku as well so that the tests are green and the applicaiton runs. If you add or change credentials, remember to update:
+These variables are set in Travis and Heroku as well so that the tests are green and the applicaiton runs. Everytime you need to add new credentials or update existing ones, remember to also update:
 
-* The credentials repository (test credentials only)
-* Travis environment variables (test credentials only)
-* Heroku staging and production environment variables (production credentials only)
+* The credentials repo (*test* credentials only)
+* Travis (*test* credentials only)
+* Heroku staging (*production* credentials only)
+* Heroku production (*poduction* credentials only)
+
+
+## Payment flows
+
+### Stripe
+
+Use their JavaScript library in the frontend (i.e., [Stripe Checkout custom integration](https://stripe.com/docs/checkout#integration-custom)) to send the supporter card data and receive a token for that card. Then send the form data and the token to your server and use this gem as in the example above to make the payment.
+
+
+### PayPal
+
+This gem uses [the new PayPal express checkout](https://developer.paypal.com/docs/integration/direct/express-checkout/integration-jsv4/upgrade-integration)
+
+As opposed to Stripe, the PayPal REST SDK
+[needs an extra previous step](https://developer.paypal.com/docs/api/quickstart/payments/)
+where your server creates a payment and returns the id to the `checkout.js` library. PayPal doesn't allow you to have a custom button anymore, so you have to use their PayPal button, which will be injected in an `iframe`.
+
 
 # Development
 
