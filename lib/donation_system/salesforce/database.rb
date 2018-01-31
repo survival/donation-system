@@ -26,10 +26,7 @@ module DonationSystem
       attr_reader :data
 
       def email_present?
-        data &&
-          data.respond_to?(:request_data) &&
-          data.request_data.respond_to?(:email) &&
-          data.request_data.email
+        data && data.respond_to?(:email) && data.email
       end
 
       def supporter_result
@@ -50,7 +47,7 @@ module DonationSystem
       end
 
       def supporter_search_result
-        email = data.request_data.email
+        email = data.email
         @supporter_search_result ||= SupporterFinder.execute(:Email, email)
       end
 
