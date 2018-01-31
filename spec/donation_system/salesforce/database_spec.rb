@@ -33,15 +33,8 @@ module DonationSystem
       end
 
       describe 'when unsuccessful' do
-        it 'returns errors if email is not present' do
-          expect(described_class.add_donation(nil)).to eq([:missing_email])
-          expect(described_class.add_donation('foo')).to eq([:missing_email])
-        end
-
-        it 'returns errors if email is null' do
-          data = VALID_ONEOFF_PAYMENT_DATA.dup
-          data.email = nil
-          expect(described_class.add_donation(data)).to eq([:missing_email])
+        it 'returns errors if data is invalid' do
+          expect(described_class.add_donation(nil)).to include(:invalid_email)
         end
 
         it 'returns errors if problems with finder' do
