@@ -6,6 +6,7 @@ module DonationSystem
                               :address, :city, :state, :zip, :country,
                               :method)
   OneOffPaymentData = Struct.new(
+    :type, :giftaid, :name, :email, :address, :city, :state, :zip, :country,
     :id, :amount, :currency, :created, :last4, :brand, :method, :record_type_id,
     :number
   ) do
@@ -19,6 +20,7 @@ module DonationSystem
   end
 
   RecurringPaymentData = Struct.new(
+    :type, :giftaid, :name, :email, :address, :city, :state, :zip, :country,
     :id, :amount, :currency, :created, :last4, :brand, :method, :record_type_id,
     :number, :expiry_month, :expiry_year, :start_date, :reference,
     :collection_day, :mandate_method, :account_holder_name
@@ -50,19 +52,23 @@ module DonationSystem
   ).freeze
 
   PaypalToken = Struct.new(:payment_id, :payer_id)
-  paypal_token = PaypalToken.new('PAY-13J25512E99606838LJU7M4Y', 'DUFRQ8GWYMJXC')
   VALID_REQUEST_DATA_PAYPAL = RawRequestData.new(
-    'one-off', '12.345', 'gbp', true, paypal_token,
+    'one-off', '12.345', 'gbp', true,
+    PaypalToken.new('PAY-13J25512E99606838LJU7M4Y', 'DUFRQ8GWYMJXC'),
     nil, '', nil, nil, nil, nil, nil,
     'paypal'
   ).freeze
 
   VALID_ONEOFF_PAYMENT_DATA = OneOffPaymentData.new(
+    'one-off', true, 'Firstname Lastname', 'user@example.com',
+    'Address', 'City', 'State', 'Z1PC0D3', 'Country',
     'ch_1BPDARGjXKYZTzxWrD35FFDc', 1234, 'gbp', 1_510_917_211, '4242',
     'Visa', 'Card (Stripe)', '01280000000Fvqi', 'P123456789'
   ).freeze
 
   VALID_RECURRING_PAYMENT_DATA = RecurringPaymentData.new(
+    'recurring', true, 'Firstname Lastname', 'user@example.com',
+    'Address', 'City', 'State', 'Z1PC0D3', 'Country',
     'sub_C6wrGA60bGiHfV', 1234, 'gbp', 1_510_917_211, '4242',
     'Visa', 'Card (Stripe)', '01280000000Fvsz', 'MC123456789',
     8, 2100, 1_510_917_211, nil, nil, nil, nil

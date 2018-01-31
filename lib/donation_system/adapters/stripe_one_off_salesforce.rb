@@ -7,15 +7,20 @@ module DonationSystem
       PAYMENT_METHOD = 'Card (Stripe)'
       RECORD_TYPE_ID = '01280000000Fvqi'
 
-      def self.adapt(charge)
-        new(charge)
+      def self.adapt(data, charge)
+        new(data, charge)
       end
 
-      def initialize(charge)
+      def initialize(data, charge)
+        @data = data
         @charge = charge
       end
 
       extend Forwardable
+      def_delegators :@data,
+                     :type, :giftaid, :name, :email,
+                     :address, :city, :state, :zip, :country
+
       def_delegators :@charge,
                      :id, :amount, :currency, :created
 
@@ -49,7 +54,7 @@ module DonationSystem
 
       private
 
-      attr_reader :charge
+      attr_reader :data, :charge
     end
   end
 end

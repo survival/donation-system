@@ -41,13 +41,13 @@ module DonationSystem
 
     def one_off_donation
       result = StripeWrapper::OneOff.charge(data)
-      item = Adapters::StripeOneOffSalesforce.adapt(result.item) if result.okay?
+      item = Adapters::StripeOneOffSalesforce.adapt(data, result.item) if result.okay?
       Result.new(item, result.errors)
     end
 
     def recurring_donation
       result = StripeWrapper::Recurring.charge(data)
-      item = Adapters::StripeRecurringSalesforce.adapt(result.item) if result.okay?
+      item = Adapters::StripeRecurringSalesforce.adapt(data, result.item) if result.okay?
       Result.new(item, result.errors)
     end
   end
