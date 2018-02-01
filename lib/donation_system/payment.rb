@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'donation_data'
 require_relative 'salesforce/database'
 require_relative 'payment_gateway'
 require_relative 'thank_you_mailer'
