@@ -66,12 +66,10 @@ module DonationSystem
     end
 
     def money_from_cents(amount, currency)
-      I18n.enforce_available_locales = false
       Money.new(amount, currency)
     end
 
     def money_from_text(amount, currency)
-      I18n.enforce_available_locales = false
       amount_as_number = number(amount).abs
       Money.from_amount(amount_as_number, currency)
     end
