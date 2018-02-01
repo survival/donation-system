@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../utils'
+require_relative '../validation'
 
 module DonationSystem
   class CreatorDataValidator
@@ -49,22 +50,6 @@ module DonationSystem
 
     def utils
       Utils.new
-    end
-
-    class Validation
-      attr_reader :errors
-
-      def initialize
-        @errors = []
-      end
-
-      def <<(error)
-        errors << error if error
-      end
-
-      def okay?
-        errors.empty?
-      end
     end
   end
 end
