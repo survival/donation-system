@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'client_api'
-require_relative 'donation_validator'
+require_relative 'donation_fields_generator'
 require_relative '../result'
 
 module DonationSystem
@@ -25,21 +25,21 @@ module DonationSystem
 
       attr_reader :client, :data, :supporter
 
-      def table
-        validation.item.table
-      end
-
       def donation
-        donation_id = create if validation.okay?
+        donation_id = create
         fetch(donation_id) if donation_id
       end
 
-      def validation
-        @validation ||= DonationValidator.execute(data, supporter)
+      def table
+        fields_generator.table
       end
 
       def fields
-        validation.item.fields
+        fields_generator.fields
+      end
+
+      def fields_generator
+        @fields_generator ||= DonationFieldsGenerator.execute(data, supporter)
       end
 
       def create
@@ -51,7 +51,7 @@ module DonationSystem
       end
 
       def errors
-        validation.errors + client.errors
+        client.errors
       end
     end
   end
