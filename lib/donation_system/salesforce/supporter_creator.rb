@@ -2,11 +2,13 @@
 
 require_relative 'client_api'
 require_relative '../result'
-require_relative 'supporter_validator'
+require_relative 'supporter_fields_generator'
 
 module DonationSystem
   module Salesforce
     class SupporterCreator
+      TABLE = 'Contact'
+
       def self.execute(data, client = ClientAPI.new)
         new(client, data).execute
       end
@@ -24,33 +26,25 @@ module DonationSystem
 
       attr_reader :client, :data
 
-      def table
-        'Contact'
-      end
-
       def supporter
-        supporter_id = create if validation.okay?
+        supporter_id = create
         fetch(supporter_id) if supporter_id
       end
 
-      def validation
-        @validation ||= SupporterValidator.execute(data)
-      end
-
       def fields
-        validation.item
+        SupporterFieldsGenerator.execute(data)
       end
 
       def create
-        client.create(table, fields)
+        client.create(TABLE, fields)
       end
 
       def fetch(id)
-        client.fetch(table, id)
+        client.fetch(TABLE, id)
       end
 
       def errors
-        validation.errors + client.errors
+        client.errors
       end
     end
   end
