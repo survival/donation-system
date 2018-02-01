@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'money'
-
-require_relative '../result'
 require_relative '../utils'
 
 module DonationSystem
@@ -27,7 +24,7 @@ module DonationSystem
           redirect_urls: redirect_urls,
           transactions: [{
             amount: { total: amount, currency: currency },
-            description: utils.generate_number(NUMBER_PREFIX)
+            description: payment_number
           }]
         }
       end
@@ -37,12 +34,15 @@ module DonationSystem
       attr_reader :data
 
       def amount
-        I18n.enforce_available_locales = false
-        Money.from_amount(BigDecimal(data.amount).abs, data.currency).to_s
+        utils.amount_in_currency_units(data.amount, currency)
       end
 
       def currency
-        data.currency.upcase
+        utils.currency_in_uppercase(data.currency)
+      end
+
+      def payment_number
+        utils.generate_number(NUMBER_PREFIX)
       end
 
       def redirect_urls

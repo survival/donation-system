@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'money'
+require_relative 'utils'
 
 module DonationSystem
   class InputDataValidator
@@ -41,12 +41,12 @@ module DonationSystem
     end
 
     def validate_amount
-      :invalid_amount unless data&.amount && number?(data.amount) &&
-                             number(data.amount).positive?
+      :invalid_amount unless data&.amount && utils.number?(data.amount) &&
+                             utils.number(data.amount).positive?
     end
 
     def validate_currency
-      :invalid_currency unless data&.currency && currency?
+      :invalid_currency unless data&.currency && utils.currency?(data.currency)
     end
 
     def validate_token
@@ -62,20 +62,8 @@ module DonationSystem
                                       VALID_METHODS.values.include?(data.method)
     end
 
-    def number?(string)
-      number(string)
-    rescue ArgumentError
-      false
-    end
-
-    def number(string)
-      BigDecimal(string)
-    end
-
-    def currency?
-      Money::Currency.new(data.currency)
-    rescue Money::Currency::UnknownCurrency
-      false
+    def utils
+      Utils.new
     end
 
     class Validation

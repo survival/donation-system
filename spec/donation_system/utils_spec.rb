@@ -25,12 +25,13 @@ module DonationSystem
       expect(utils.number('12.34')).to eq(12.34)
     end
 
-    it 'detects an integer' do
-      expect(utils.integer?('1234')).to be_truthy
+    it 'detects a currency' do
+      expect(utils.currency?('gbp')).to be_truthy
+      expect(utils.currency?('GBP')).to be_truthy
     end
 
-    it 'detects a non-integer' do
-      expect(utils.integer?('not an integer')).to be_falsy
+    it 'detects a non-currency' do
+      expect(utils.currency?('not a currency')).to be_falsy
     end
 
     it 'detects a date' do
@@ -41,9 +42,22 @@ module DonationSystem
       expect(utils.date?('not a date')).to be_falsy
     end
 
+    it 'detects a url' do
+      expect(utils.url?('http://hello.com')).to be_truthy
+    end
+
+    it 'detects a non-url' do
+      expect(utils.url?('not a url')).to be_falsy
+    end
+
     it 'formats date or seconds since epoch to date' do
       expect(utils.format_date(1_000_000_000)).to eq('2001-09-09')
       expect(utils.format_date('2017-11-17T14:59:00Z')).to eq('2017-11-17')
+    end
+
+    it 'calculates an amount in cents' do
+      expect(utils.amount_in_cents(1234, 'gbp')).to eq(1234)
+      expect(utils.amount_in_cents('12.34', 'gbp')).to eq(1234)
     end
 
     it 'calculates an amount in currency units' do
