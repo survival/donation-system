@@ -63,14 +63,6 @@ module DonationSystem
         expect(payment_data.received?).to be_truthy
       end
 
-      it 'responds to last four digits of the card' do
-        expect(payment_data.respond_to?(:last4)).to be_truthy
-      end
-
-      it 'responds to brand' do
-        expect(payment_data.respond_to?(:brand)).to be_truthy
-      end
-
       it 'responds to a payment method' do
         expect(payment_data.method).to eq(described_class::PAYMENT_METHOD)
       end

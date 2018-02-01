@@ -17,6 +17,14 @@ module DonationSystem
       it_behaves_like 'Input payment data'
       it_behaves_like 'Salesforce one-off payment data'
 
+      it 'has last four digits of the card' do
+        expect(payment_data.last4).to eq('4242')
+      end
+
+      it 'has a card brand' do
+        expect(payment_data.brand).to eq('Visa')
+      end
+
       it 'works with the real object to adapt', vcr: { record: :once } do
         charge = DonationSystem::StripeWrapper::OneOff.charge(VALID_REQUEST_DATA)
         payment_data = described_class.adapt(VALID_REQUEST_DATA, charge.item)
