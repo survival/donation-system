@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative '../utils'
-
 module DonationSystem
   module Salesforce
     class DonationFieldsGenerator
@@ -46,8 +44,8 @@ module DonationSystem
 
       def required_data
         {
-          Amount: amount_in_currency_units,
-          CloseDate: format_time(data.created),
+          Amount: data.amount,
+          CloseDate: data.created,
           Name: NAME,
           StageName: stage_name,
           AccountId: supporter[:AccountId]
@@ -56,7 +54,7 @@ module DonationSystem
 
       def card_data
         {
-          CurrencyIsoCode: data.currency.upcase,
+          CurrencyIsoCode: data.currency,
           Last_digits__c: data.last4,
           Card_type__c: data.brand,
           Receiving_Organization__c: SURVIVAL_UK,
@@ -79,7 +77,7 @@ module DonationSystem
       def recurring_required_data
         {
           Contact__c: supporter[:Id],
-          Amount__c: amount_in_currency_units
+          Amount__c: data.amount
         }
       end
 
@@ -94,7 +92,7 @@ module DonationSystem
         {
           Gateway_mandate_ID__c: data.id,
           Web_Mandate_Number__c: data.number,
-          Start_Date__c: format_time(data.start_date),
+          Start_Date__c: data.start_date,
           DD_Mandate_Reference__c: data.reference,
           Collection_day__c: data.collection_day,
           DD_Method__c: data.mandate_method,
@@ -104,18 +102,6 @@ module DonationSystem
 
       def stage_name
         data.received? ? RECEIVED : DECLINED
-      end
-
-      def amount_in_currency_units
-        utils.amount_in_currency_units(data)
-      end
-
-      def format_time(seconds_since_epoch)
-        utils.format_time(seconds_since_epoch)
-      end
-
-      def utils
-        Utils.new
       end
 
       TableAndFields = Struct.new(:table, :fields)

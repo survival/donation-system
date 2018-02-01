@@ -40,12 +40,11 @@ module DonationSystem
       end
 
       def validate_amount
-        :invalid_amount unless data&.amount && utils.integer?(data.amount)
+        :invalid_amount unless data&.amount && utils.number?(data.amount)
       end
 
       def validate_creation_date
-        :invalid_creation_date unless data&.created &&
-                                      utils.integer?(data.created)
+        :invalid_creation_date unless data&.created && utils.date?(data.created)
       end
 
       def utils

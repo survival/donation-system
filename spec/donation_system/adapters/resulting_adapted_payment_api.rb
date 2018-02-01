@@ -48,15 +48,15 @@ module DonationSystem
       end
 
       it 'responds to amount in cents' do
-        expect(payment_data.amount).to eq(1234)
+        expect(payment_data.amount).to eq('12.34')
       end
 
       it 'responds to currency' do
-        expect(payment_data.currency).to eq('gbp')
+        expect(payment_data.currency).to eq('GBP')
       end
 
-      it 'responds to creation date in seconds since epoch' do
-        expect(payment_data.created > 1_000_000_000).to be_truthy
+      it 'responds to creation date' do
+        expect(Date.parse(payment_data.created).year).to eq(2017)
       end
 
       it 'responds to received' do
@@ -98,7 +98,7 @@ module DonationSystem
       end
 
       it 'responds to start_date' do
-        expect(payment_data.start_date > 1_000_000_000).to be_truthy
+        expect(Date.parse(payment_data.start_date).year).to eq(2017)
       end
 
       it 'responds to reference' do

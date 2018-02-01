@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-require 'date'
-require 'money'
+require_relative '../utils'
 
 module DonationSystem
   module Adapters
@@ -27,13 +26,11 @@ module DonationSystem
                      :id
 
       def amount
-        amount_as_number = BigDecimal(payment_data.total).abs
-        I18n.enforce_available_locales = false
-        Money.from_amount(amount_as_number, payment_data.currency).cents
+        utils.amount_in_currency_units(payment_data.total, currency)
       end
 
       def currency
-        Money::Currency.new(payment_data.currency).to_s.downcase
+        utils.currency_in_uppercase(payment_data.currency)
       end
 
       def name
@@ -65,7 +62,7 @@ module DonationSystem
       end
 
       def created
-        Time.new(payment.create_time).to_i
+        utils.format_date(payment.create_time)
       end
 
       def received?
@@ -110,6 +107,10 @@ module DonationSystem
 
       def shipping_address
         payment.payer.payer_info.shipping_address
+      end
+
+      def utils
+        Utils.new
       end
     end
   end
