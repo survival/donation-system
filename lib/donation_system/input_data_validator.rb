@@ -5,6 +5,7 @@ require 'money'
 module DonationSystem
   class InputDataValidator
     VALID_TYPES = { oneoff: 'one-off', recurring: 'recurring' }.freeze
+    VALID_METHODS = { stripe: 'stripe', paypal: 'paypal' }.freeze
 
     def self.execute(data)
       new(data).execute
@@ -22,6 +23,7 @@ module DonationSystem
       validation << validate_currency
       validation << validate_token
       validation << validate_email
+      validation << validate_method
       validation
     end
 
@@ -53,6 +55,11 @@ module DonationSystem
 
     def validate_email
       :missing_email unless data&.email
+    end
+
+    def validate_method
+      :invalid_donation_method unless data&.method &&
+                                      VALID_METHODS.values.include?(data.method)
     end
 
     def number?(string)
