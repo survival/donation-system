@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 require 'donation_system/data_structs_for_tests'
-require 'donation_system/adapters/resulting_adapted_payment_api'
+require 'donation_system/adapters/payment_adapted_to_salesforce_api'
 
 require 'donation_system/adapters/stripe_one_off_salesforce'
 require 'donation_system/stripe_wrapper/one_off'
