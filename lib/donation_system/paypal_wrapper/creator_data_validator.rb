@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'money'
-require 'uri'
+require_relative '../utils'
+require_relative '../validation'
 
 module DonationSystem
   class CreatorDataValidator
@@ -32,56 +32,24 @@ module DonationSystem
     end
 
     def validate_amount
-      :invalid_amount unless data&.amount && number?(data.amount) &&
-                             number(data.amount).positive?
+      :invalid_amount unless data&.amount && utils.number?(data.amount) &&
+                             utils.number(data.amount).positive?
     end
 
     def validate_currency
-      :invalid_currency unless data&.currency && currency?
+      :invalid_currency unless data&.currency && utils.currency?(data.currency)
     end
 
     def validate_return_url
-      :invalid_return_url unless data&.return_url && valid_url?(data.return_url)
+      :invalid_return_url unless data&.return_url && utils.url?(data.return_url)
     end
 
     def validate_cancel_url
-      :invalid_cancel_url unless data&.cancel_url && valid_url?(data.cancel_url)
+      :invalid_cancel_url unless data&.cancel_url && utils.url?(data.cancel_url)
     end
 
-    def number?(string)
-      number(string)
-    rescue ArgumentError
-      false
-    end
-
-    def number(string)
-      BigDecimal(string)
-    end
-
-    def currency?
-      Money::Currency.new(data.currency)
-    rescue Money::Currency::UnknownCurrency
-      false
-    end
-
-    def valid_url?(url)
-      url =~ URI::DEFAULT_PARSER.regexp[:ABS_URI]
-    end
-
-    class Validation
-      attr_reader :errors
-
-      def initialize
-        @errors = []
-      end
-
-      def <<(error)
-        errors << error if error
-      end
-
-      def okay?
-        errors.empty?
-      end
+    def utils
+      Utils.new
     end
   end
 end

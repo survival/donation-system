@@ -2,6 +2,7 @@
 
 require 'date'
 require 'money'
+require 'uri'
 
 module DonationSystem
   class Utils
@@ -21,9 +22,9 @@ module DonationSystem
       BigDecimal(string)
     end
 
-    def integer?(number)
-      Integer(number)
-    rescue ArgumentError
+    def currency?(string)
+      currency_in_uppercase(string)
+    rescue Money::Currency::UnknownCurrency
       false
     end
 
@@ -33,20 +34,44 @@ module DonationSystem
       false
     end
 
+    def url?(url)
+      url =~ URI::DEFAULT_PARSER.regexp[:ABS_URI]
+    end
+
     def format_date(date)
       return Time.at(date).strftime(SALESFORCE_TIME_FORMAT) if integer?(date)
       Date.parse(date).strftime(SALESFORCE_TIME_FORMAT)
     end
 
+    def amount_in_cents(amount, currency)
+      return money_from_cents(amount, currency).cents if integer?(amount)
+      money_from_text(amount, currency).cents
+    end
+
     def amount_in_currency_units(amount, currency)
-      I18n.enforce_available_locales = false
-      return Money.new(amount, currency).to_s if integer?(amount)
-      amount_as_number = number(amount).abs
-      Money.from_amount(amount_as_number, currency).to_s
+      return money_from_cents(amount, currency).to_s if integer?(amount)
+      money_from_text(amount, currency).to_s
     end
 
     def currency_in_uppercase(currency)
       Money::Currency.new(currency).to_s
+    end
+
+    private
+
+    def integer?(number)
+      Integer(number)
+    rescue ArgumentError
+      false
+    end
+
+    def money_from_cents(amount, currency)
+      Money.new(amount, currency)
+    end
+
+    def money_from_text(amount, currency)
+      amount_as_number = number(amount).abs
+      Money.from_amount(amount_as_number, currency)
     end
   end
 end

@@ -10,7 +10,7 @@ module DonationSystem
       end
 
       it 'responds to giftaid' do
-        expect(payment_data.giftaid).to be_truthy
+        expect(payment_data.giftaid).to be(true)
       end
 
       it 'responds to name' do
@@ -60,15 +60,7 @@ module DonationSystem
       end
 
       it 'responds to received' do
-        expect(payment_data.received?).to be_truthy
-      end
-
-      it 'responds to last four digits of the card' do
-        expect(payment_data.respond_to?(:last4)).to be_truthy
-      end
-
-      it 'responds to brand' do
-        expect(payment_data.respond_to?(:brand)).to be_truthy
+        expect(payment_data.received?).to be(true)
       end
 
       it 'responds to a payment method' do

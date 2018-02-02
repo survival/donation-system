@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'money'
 require_relative '../utils'
 
 module DonationSystem
@@ -25,7 +24,7 @@ module DonationSystem
           id: "mandate_#{mandate_number}",
           name: "Mandate #{mandate_number}",
           amount: amount_in_cents,
-          currency: 'gbp',
+          currency: data.currency,
           interval: 'month',
           interval_count: 1
         }
@@ -52,7 +51,7 @@ module DonationSystem
       attr_reader :data
 
       def amount_in_cents
-        Money.from_amount(BigDecimal(data.amount).abs, data.currency).cents
+        utils.amount_in_cents(data.amount, data.currency)
       end
 
       def subscription_metadata(plan, customer)

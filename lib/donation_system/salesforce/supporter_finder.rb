@@ -6,6 +6,8 @@ require_relative '../result'
 module DonationSystem
   module Salesforce
     class SupporterFinder
+      TABLE = 'Contact'
+
       ID = :Id
       SORT_FIELD = :First_entered__c
 
@@ -27,10 +29,6 @@ module DonationSystem
 
       attr_reader :client, :field, :value
 
-      def table
-        'Contact'
-      end
-
       def supporter
         first = first_entered
         fetch(first[ID]) if first
@@ -42,7 +40,7 @@ module DonationSystem
       end
 
       def expression
-        "select #{ID}, #{SORT_FIELD} from #{table} where #{field}='#{value}'"
+        "select #{ID}, #{SORT_FIELD} from #{TABLE} where #{field}='#{value}'"
       end
 
       def search
@@ -50,7 +48,7 @@ module DonationSystem
       end
 
       def fetch(id)
-        client.fetch(table, id)
+        client.fetch(TABLE, id)
       end
 
       def errors

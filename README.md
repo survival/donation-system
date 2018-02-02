@@ -79,9 +79,14 @@ The `data` that the gem consumes can be anything that responds to at least the f
 * `data.country`: the country of the donor
 * `data.method`: the payment method. Valid values: `'stripe'` for Stripe donations or `'paypal'` for PayPal donations.
 
+Due to an error thrown by the `Money` gem ([see this issue](https://github.com/RubyMoney/money/issues/593)) you will also have to set this in some relevant place of your application:
+
+```ruby
+I18n.enforce_available_locales = false
+```
+
 
 ## Credentials
-
 For the gem to work you need to set some environment variables:
 
 1. The Stripe API keys of your Stripe account:
