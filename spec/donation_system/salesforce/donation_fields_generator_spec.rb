@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'donation_system/data_structs_for_tests'
-require 'donation_system/donation_data'
 require 'donation_system/salesforce/donation_fields_generator'
 require 'spec_helper'
 
@@ -36,13 +35,16 @@ module DonationSystem
       let(:supporter) { SupporterFake.new('id', '1') }
 
       describe '#for_oneoff' do
-        let(:fields) do
-          described_class.new(
-            VALID_REQUEST_DATA, VALID_ONEOFF_PAYMENT_DATA, supporter
-          ).for_oneoff
+        let(:generator) do
+          described_class.execute(VALID_ONEOFF_PAYMENT_DATA, supporter)
         end
+        let(:fields) { generator.fields }
 
         it_behaves_like 'Generic fields'
+
+        it 'has the table name' do
+          expect(generator.table).to eq(described_class::ONEOFF_TABLE)
+        end
 
         describe 'Salesforce required fields' do
           it 'has required field amount' do
@@ -98,13 +100,16 @@ module DonationSystem
       end
 
       describe '#for_recurring' do
-        let(:fields) do
-          described_class.new(
-            VALID_REQUEST_DATA, VALID_RECURRING_PAYMENT_DATA, supporter
-          ).for_recurring
+        let(:generator) do
+          described_class.execute(VALID_RECURRING_PAYMENT_DATA, supporter)
         end
+        let(:fields) { generator.fields }
 
         it_behaves_like 'Generic fields'
+
+        it 'has the table name' do
+          expect(generator.table).to eq(described_class::RECURRING_TABLE)
+        end
 
         describe 'Salesforce required fields' do
           it 'has required field Contact__c' do

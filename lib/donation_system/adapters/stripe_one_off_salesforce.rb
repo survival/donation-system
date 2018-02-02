@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../utils'
+
 module DonationSystem
   module Adapters
     class StripeOneOffSalesforce
@@ -22,7 +24,19 @@ module DonationSystem
                      :address, :city, :state, :zip, :country
 
       def_delegators :@charge,
-                     :id, :amount, :currency, :created
+                     :id
+
+      def amount
+        utils.amount_in_currency_units(charge.amount, currency)
+      end
+
+      def currency
+        utils.currency_in_uppercase(charge.currency)
+      end
+
+      def created
+        utils.format_date(charge.created)
+      end
 
       def received?
         charge.status == RECEIVED_STATUS
@@ -55,6 +69,10 @@ module DonationSystem
       private
 
       attr_reader :data, :charge
+
+      def utils
+        Utils.new
+      end
     end
   end
 end

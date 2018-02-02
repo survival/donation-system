@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'donation_creator'
+require_relative 'payment_data_validator'
 require_relative 'supporter_creator'
 require_relative 'supporter_finder'
 
@@ -16,7 +17,7 @@ module DonationSystem
       end
 
       def add_donation
-        return [:missing_email] unless email_present?
+        return validation.errors unless validation.okay?
         return supporter_result.errors unless supporter_result.okay?
         create_donation.errors
       end
@@ -25,11 +26,8 @@ module DonationSystem
 
       attr_reader :data
 
-      def email_present?
-        data &&
-          data.respond_to?(:request_data) &&
-          data.request_data.respond_to?(:email) &&
-          data.request_data.email
+      def validation
+        @validation ||= PaymentDataValidator.execute(data)
       end
 
       def supporter_result
@@ -50,7 +48,7 @@ module DonationSystem
       end
 
       def supporter_search_result
-        email = data.request_data.email
+        email = data.email
         @supporter_search_result ||= SupporterFinder.execute(:Email, email)
       end
 

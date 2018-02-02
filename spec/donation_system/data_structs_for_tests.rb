@@ -63,16 +63,16 @@ module DonationSystem
   VALID_ONEOFF_PAYMENT_DATA = AdaptedOneOffPaymentData.new(
     'one-off', true, 'Firstname Lastname', 'user@example.com',
     'Address', 'City', 'State', 'Z1PC0D3', 'Country',
-    'ch_1BPDARGjXKYZTzxWrD35FFDc', 1234, 'gbp', 1_510_917_211, '4242',
+    'ch_1BPDARGjXKYZTzxWrD35FFDc', '12.34', 'GBP', '2017-11-17', '4242',
     'Visa', 'Card (Stripe)', '01280000000Fvqi', 'P123456789'
   ).freeze
 
   VALID_RECURRING_PAYMENT_DATA = AdaptedRecurringPaymentData.new(
     'recurring', true, 'Firstname Lastname', 'user@example.com',
     'Address', 'City', 'State', 'Z1PC0D3', 'Country',
-    'sub_C6wrGA60bGiHfV', 1234, 'gbp', 1_510_917_211, '4242',
+    'sub_C6wrGA60bGiHfV', '12.34', 'GBP', '2017-11-17', '4242',
     'Visa', 'Card (Stripe)', '01280000000Fvsz', 'MC123456789',
-    8, 2100, 1_510_917_211, nil, nil, nil, nil
+    8, 2100, '2017-11-17', nil, nil, nil, nil
   ).freeze
 
   ChargeSourceFake = Struct.new(:last4, :brand)
@@ -119,7 +119,7 @@ module DonationSystem
     :line1, :city, :state, :postal_code, :country_code
   )
   VALID_PAYPAL_PAYMENT = PaypalPaymentFake.new(
-    'PAY-13J25512E99606838LJU7M4Y', '2018-01-30T14:59:00Z', 'approved', nil,
+    'PAY-13J25512E99606838LJU7M4Y', '2017-11-17T14:59:00Z', 'approved', nil,
     [PaypalTransactionFake.new(
       PaypalAmountFake.new('12.34', 'GBP'), 'P987654321'
     )],

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../utils'
+
 module DonationSystem
   module Adapters
     class StripeRecurringSalesforce
@@ -22,14 +24,18 @@ module DonationSystem
                      :address, :city, :state, :zip, :country
 
       def_delegators :@subscription,
-                     :id, :created
+                     :id
 
       def amount
-        subscription.plan.amount
+        utils.amount_in_currency_units(subscription.plan.amount, currency)
       end
 
       def currency
-        subscription.plan.currency
+        utils.currency_in_uppercase(subscription.plan.currency)
+      end
+
+      def created
+        utils.format_date(subscription.created)
       end
 
       def received?
@@ -65,7 +71,8 @@ module DonationSystem
       end
 
       def start_date
-        subscription.current_period_start || subscription.created
+        start = subscription.current_period_start || subscription.created
+        utils.format_date(start)
       end
 
       def reference; end
@@ -83,6 +90,10 @@ module DonationSystem
       private
 
       attr_reader :data, :subscription
+
+      def utils
+        Utils.new
+      end
     end
   end
 end

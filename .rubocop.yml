@@ -22,7 +22,7 @@ Style/RegexpLiteral:
 
 Style/FormatStringToken:
   Exclude:
-    - 'lib/donation_system/salesforce/donation_fields_generator.rb'
+    - 'lib/donation_system/utils.rb'
 
 Metrics/AbcSize:
   Exclude:
