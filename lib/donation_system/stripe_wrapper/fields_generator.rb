@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'money'
+require_relative '../utils'
 
 module DonationSystem
   module StripeWrapper
@@ -15,7 +16,7 @@ module DonationSystem
           currency: data.currency,
           source: data.token,
           description: "Charge for #{data.email}",
-          metadata: { number: generate_number('P') }
+          metadata: { number: utils.generate_number('P') }
         }
       end
 
@@ -54,10 +55,6 @@ module DonationSystem
         Money.from_amount(BigDecimal(data.amount).abs, data.currency).cents
       end
 
-      def generate_number(number_prefix)
-        number_prefix + Array.new(9) { Random.rand(9) }.join
-      end
-
       def subscription_metadata(plan, customer)
         card = card_data(customer)
         {
@@ -72,11 +69,15 @@ module DonationSystem
       end
 
       def mandate_number
-        @mandate_number ||= generate_number('MC')
+        @mandate_number ||= utils.generate_number('MC')
       end
 
       def card_data(customer)
         customer.sources.data.first
+      end
+
+      def utils
+        Utils.new
       end
     end
   end

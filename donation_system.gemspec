@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'mail', '~> 2.7', '>= 2.7.0'
   spec.add_dependency 'money', '~> 6.10', '>= 6.10.0'
+  spec.add_dependency 'paypal-sdk-rest', '~> 1.7', '>= 1.7.2'
   spec.add_dependency 'restforce', '~> 2.5.3'
   spec.add_dependency 'stripe', '~> 3.8', '>= 3.8.0'
 
