@@ -12,6 +12,8 @@ module DonationSystem
         subject 'Thank you for your donation'
         body "Thank you for your donation #{first_name}"
       end
+    rescue StandardError
+      [:mailer_error]
     end
 
     def self.configure(protocol)

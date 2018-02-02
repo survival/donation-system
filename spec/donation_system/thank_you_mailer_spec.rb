@@ -30,5 +30,11 @@ module DonationSystem
     it 'has a subject' do
       expect(email.subject).not_to be(nil)
     end
+
+    it 'rescues mailer errors' do
+      # This is temporary until mailing is done from Mailchimp or Salesforce
+      allow(Mail).to receive(:deliver).and_raise(StandardError, 'error')
+      expect(email).to eq([:mailer_error])
+    end
   end
 end
