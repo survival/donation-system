@@ -10,7 +10,7 @@ module DonationSystem
       end
 
       it 'responds to giftaid' do
-        expect(payment_data.giftaid).to be_truthy
+        expect(payment_data.giftaid).to be(true)
       end
 
       it 'responds to name' do
@@ -60,7 +60,7 @@ module DonationSystem
       end
 
       it 'responds to received' do
-        expect(payment_data.received?).to be_truthy
+        expect(payment_data.received?).to be(true)
       end
 
       it 'responds to a payment method' do

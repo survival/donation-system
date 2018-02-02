@@ -14,11 +14,11 @@ module DonationSystem
     end
 
     it 'detects an number' do
-      expect(utils.number?('12.34')).to be_truthy
+      expect(utils.number?('12.34')).to be(true)
     end
 
     it 'detects a non-number' do
-      expect(utils.number?('not an number')).to be_falsy
+      expect(utils.number?('not an number')).to be(false)
     end
 
     it 'converts to number' do
@@ -26,28 +26,28 @@ module DonationSystem
     end
 
     it 'detects a currency' do
-      expect(utils.currency?('gbp')).to be_truthy
-      expect(utils.currency?('GBP')).to be_truthy
+      expect(utils.currency?('gbp')).to be(true)
+      expect(utils.currency?('GBP')).to be(true)
     end
 
     it 'detects a non-currency' do
-      expect(utils.currency?('not a currency')).to be_falsy
+      expect(utils.currency?('not a currency')).to be(false)
     end
 
     it 'detects a date' do
-      expect(utils.date?('2001-09-09')).to be_truthy
+      expect(utils.date?('2001-09-09')).to be(true)
     end
 
     it 'detects a non-date' do
-      expect(utils.date?('not a date')).to be_falsy
+      expect(utils.date?('not a date')).to be(false)
     end
 
     it 'detects a url' do
-      expect(utils.url?('http://hello.com')).to be_truthy
+      expect(utils.url?('http://hello.com')).to be(true)
     end
 
     it 'detects a non-url' do
-      expect(utils.url?('not a url')).to be_falsy
+      expect(utils.url?('not a url')).to be(false)
     end
 
     it 'formats date or seconds since epoch to date' do
