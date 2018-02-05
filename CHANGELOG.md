@@ -5,6 +5,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 
+## [2.0.0] - 2018-02-02
+### Changed:
+- The payment token can now be a string representing the card details in the case of Stripe, or a struct containing payment id and payer id in the case of PayPal
+- The line that sets `I18n.enforce_available_locales = false`, and that is needed for the Money gem to work properly, was extracted out of the gem, and it is now the responsibility of the consumer to set it.
+- The adapters now take both the input data and the payment data, and merge both into an adapted object that can be passed to Salesforce.
+- The supporter and donation validators have been merged into one validator and moved one level up, to be used in the Salesforce database.
+
+### Added:
+- An implementation of PayPal one-off donations
+- An extra parameter `method` in the donation data struct (and test structs), to specify if the payment method is Stripe or PayPal.
+- An extra step for PayPal donations, hence the `donation_system/paypal_wrapper/payment_creator` is also exposed
+- A Utils class to extract all generic operations like amount conversions or checking if a parameter is valid, which are independent of the gem business logic but used accross several classes.
+- The payment gateway selction has been split into the pure business logic, which now lives in the `PaymentGateway` class, and what's purely configuration, which lives in a new `Selector` module, and allows to select gateway and adapter depending on the payment method and type.
+
+
 ## [1.0.0] - 2018-01-22
 ### Changed:
 - Since now there are two types of Stripe payment, the validator was moved one level up
