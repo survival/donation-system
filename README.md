@@ -124,6 +124,9 @@ For the gem to work you need to set some environment variables:
     export SALESFORCE_API_VERSION=...
     ```
 
+NOTE: If the Salesforce password is updated, the security token will have
+to be updated at the same time. The new token should be provided in the email confirming a change of password.
+
 These variables are set in Travis and Heroku as well so that the tests are green and the applicaiton runs. Everytime you need to add new credentials or update existing ones, remember to also update:
 
 * The credentials repo (*test* credentials only)
@@ -230,6 +233,9 @@ bundle exec rspec path/to/test/file.rb && rubocop
 bundle exec rspec path/to/test/file.rb:TESTLINENUMBER && rubocop
 ```
 
+Note: You may see a failing test for setting up Stripe subscriptions if the number of subscriptions for the test user
+exceeds 25. To solve this error, it is necessary to log on to the Stripe dashboard and delete previous subscriptions
+for the test user.
 
 ### To release a new version
 

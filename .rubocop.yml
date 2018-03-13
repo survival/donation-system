@@ -1,6 +1,6 @@
 AllCops:
   DisplayCopNames: true
-  TargetRubyVersion: 2.4.1
+  TargetRubyVersion: 2.5.0
 
 Documentation:
   Enabled: false
@@ -13,6 +13,10 @@ Metrics/BlockLength:
 Metrics/ModuleLength:
   Exclude:
     - 'spec/**/*.rb'
+
+Style/ExpandPathArguments:
+  Exclude:
+    - '*.gemspec'
 
 Metrics/LineLength:
   Max: 82
